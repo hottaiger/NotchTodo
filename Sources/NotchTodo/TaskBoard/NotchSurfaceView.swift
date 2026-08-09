@@ -1,0 +1,80 @@
+import SwiftUI
+
+struct NotchSurfaceView: View {
+    @ObservedObject var controller: NotchPanelController
+    @ObservedObject var store: TaskStore
+    @ObservedObject var settings: AppSettings
+    let usesTrailingSummaryLayout: Bool
+    let isNotchAttached: Bool
+
+    var body: some View {
+        Group {
+            if controller.isExpanded { TaskBoardView(store: store, controller: controller) }
+            else { CapsuleSummaryView(store: store, showsCount: settings.showsTaskCount, usesTrailingSummaryLayout: usesTrailingSummaryLayout, isNotchAttached: isNotchAttached).onTapGesture { controller.expand() }.contextMenu { Button("打开待办看板") { controller.expand() }; Divider(); Button("退出 NotchTodo", role: .destructive) { NSApp.terminate(nil) } } }
+        }
+        .animation(.spring(response: 0.22, dampingFraction: 0.86), value: controller.isExpanded)
+    }
+}
+
+private struct CapsuleSummaryView: View {
+    @ObservedObject var store: TaskStore
+    let showsCount: Bool
+    let usesTrailingSummaryLayout: Bool
+    let isNotchAttached: Bool
+
+    private var highestPriority: TaskPriority? { store.activeTasks.map(\.priority).max { $0.rawValue < $1.rawValue } }
+
+    var body: some View {
+        let summary = HStack(spacing: 8) {
+            Circle().fill(color(for: highestPriority)).frame(width: 7, height: 7)
+            if showsCount { Text("\(store.activeTasks.count) 项待办").font(.system(size: 12, weight: .semibold)) }
+        }
+        .foregroundStyle(.white)
+
+        Group {
+            if usesTrailingSummaryLayout { HStack { Spacer(minLength: 0); summary }.padding(.trailing, 10) }
+            else { summary.frame(maxWidth: .infinity) }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.black)
+        .clipShape(NotchAttachedCapsuleShape(
+            leadingRadius: isNotchAttached ? 0 : 10,
+            topTrailingRadius: isNotchAttached ? 0 : 10,
+            bottomTrailingRadius: isNotchAttached ? 7 : 10
+        ))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("NotchTodo，\(store.activeTasks.count) 项未完成任务")
+        .accessibilityHint("点击展开待办看板")
+    }
+
+    private func color(for priority: TaskPriority?) -> Color {
+        switch priority { case .high: .red; case .medium: .blue; case .low: .gray; case nil: .gray.opacity(0.55) }
+    }
+}
+
+private struct NotchAttachedCapsuleShape: Shape {
+    let leadingRadius: CGFloat
+    let topTrailingRadius: CGFloat
+    let bottomTrailingRadius: CGFloat
+
+    func path(in rect: CGRect) -> Path {
+        let leadingRadius = min(leadingRadius, rect.height / 2)
+        let topTrailingRadius = min(topTrailingRadius, rect.height / 2)
+        let bottomTrailingRadius = min(bottomTrailingRadius, rect.height / 2)
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX + leadingRadius, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX - topTrailingRadius, y: rect.minY))
+        if topTrailingRadius > 0 { path.addQuadCurve(to: CGPoint(x: rect.maxX, y: rect.minY + topTrailingRadius), control: CGPoint(x: rect.maxX, y: rect.minY)) }
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY - bottomTrailingRadius))
+        if bottomTrailingRadius > 0 { path.addQuadCurve(to: CGPoint(x: rect.maxX - bottomTrailingRadius, y: rect.maxY), control: CGPoint(x: rect.maxX, y: rect.maxY)) }
+        path.addLine(to: CGPoint(x: rect.minX + leadingRadius, y: rect.maxY))
+        if leadingRadius > 0 {
+            path.addQuadCurve(to: CGPoint(x: rect.minX, y: rect.maxY - leadingRadius), control: CGPoint(x: rect.minX, y: rect.maxY))
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.minY + leadingRadius))
+            path.addQuadCurve(to: CGPoint(x: rect.minX + leadingRadius, y: rect.minY), control: CGPoint(x: rect.minX, y: rect.minY))
+        } else {
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.minY))
+        }
+        return path
+    }
+}

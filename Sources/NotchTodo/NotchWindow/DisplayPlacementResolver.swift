@@ -1,0 +1,25 @@
+import AppKit
+
+struct DisplayPlacementResolver {
+    static func collapsedFrame(on screen: NSScreen, width: CGFloat = 104, height: CGFloat = 34, placement: ExternalDisplayPlacement = .center) -> NSRect {
+        if let notchFrame = notchRightFrame(on: screen, width: width) { return notchFrame }
+        let visible = screen.visibleFrame
+        let x: CGFloat
+        if screen.safeAreaInsets.top > 0 || placement == .center { x = visible.midX - width / 2 }
+        else if placement == .leading { x = visible.minX + 16 }
+        else { x = visible.maxX - width - 16 }
+        return NSRect(x: x, y: visible.maxY - height, width: width, height: height)
+    }
+
+    static func notchRightFrame(on screen: NSScreen, width: CGFloat) -> NSRect? {
+        guard screen.safeAreaInsets.top > 0,
+              let right = screen.auxiliaryTopRightArea else { return nil }
+        let x = min(right.minX - 18, right.maxX - width)
+        return NSRect(x: x, y: right.minY, width: width, height: right.height)
+    }
+
+    static func expandedFrame(on screen: NSScreen, width: CGFloat = 420, height: CGFloat = 510, placement: ExternalDisplayPlacement = .center) -> NSRect {
+        let collapsed = collapsedFrame(on: screen, width: width, height: 34, placement: placement)
+        return NSRect(x: collapsed.minX, y: screen.visibleFrame.maxY - height, width: width, height: height)
+    }
+}
