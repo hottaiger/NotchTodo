@@ -16,7 +16,7 @@ final class PanelTransitionPhaseTests: XCTestCase {
         XCTAssertFalse(NotchSurfaceView.shouldUseFishBackground(isExpanded: true))
     }
 
-    func testFishShakeStartsAfterEightHundredMilliseconds() {
-        XCTAssertEqual(PixelFishView.collapseShakeDelay, 0.8, accuracy: 0.001)
+    func testFishShakeStartsAfterFiveHundredMilliseconds() {
+        XCTAssertEqual(PixelFishView.collapseShakeDelay, 0.5, accuracy: 0.001)
     }
 }

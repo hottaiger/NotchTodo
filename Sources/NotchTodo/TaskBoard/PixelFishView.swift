@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct PixelFishView: View {
-    static let collapseShakeDelay: TimeInterval = 0.8
+    static let collapseShakeDelay: TimeInterval = 0.5
     let collapseAnimationID: UInt
     let shouldReduceMotion: Bool
     @State private var horizontalOffset: CGFloat = 0
