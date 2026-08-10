@@ -24,7 +24,7 @@ struct DisplayPlacementResolver {
         on screen: NSScreen,
         capsuleWidth: CGFloat = 104,
         fishWidth: CGFloat = 28,
-        fishSpacing: CGFloat = 4,
+        fishSpacing: CGFloat = 2,
         placement: ExternalDisplayPlacement = .center
     ) -> NSRect {
         let capsule = collapsedFrame(on: screen, width: capsuleWidth, placement: placement)

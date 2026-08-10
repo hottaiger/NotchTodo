@@ -27,8 +27,8 @@ final class DisplayPlacementResolverTests: XCTestCase {
 
         if let right = screen.auxiliaryTopRightArea {
             XCTAssertEqual(surface.minX, right.minX - 18, accuracy: 0.5)
-            XCTAssertEqual(surface.minX + 50, right.minX + 32, accuracy: 0.5)
-            XCTAssertEqual(surface.width, 154, accuracy: 0.5)
+            XCTAssertEqual(surface.minX + 48, right.minX + 30, accuracy: 0.5)
+            XCTAssertEqual(surface.width, 152, accuracy: 0.5)
             XCTAssertEqual(surface.height, right.height, accuracy: 0.5)
         } else {
             XCTAssertEqual(surface.width, 136, accuracy: 0.5)

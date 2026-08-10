@@ -4,7 +4,7 @@ enum CapsuleSummaryText {
     static func title(from titles: [String]) -> String {
         guard let first = titles.first, !first.isEmpty else { return "暂无待办" }
         let prefix = String(first.prefix(5))
-        return first.count > 5 ? "\(prefix)…" : prefix
+        return first.count > 5 ? "\(prefix)..." : prefix
     }
 }
 
@@ -22,7 +22,7 @@ struct NotchSurfaceView: View {
         isNotchAttached ? 18 : 2
     }
 
-    private var fishBackgroundWidth: CGFloat { isNotchAttached ? 50 : 32 }
+    private var fishBackgroundWidth: CGFloat { isNotchAttached ? 48 : 32 }
 
     var body: some View {
         ZStack(alignment: .topLeading) {
