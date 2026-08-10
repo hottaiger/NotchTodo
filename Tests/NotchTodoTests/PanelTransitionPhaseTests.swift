@@ -10,4 +10,9 @@ final class PanelTransitionPhaseTests: XCTestCase {
         XCTAssertTrue(NotchSurfaceView.shouldShowFish(isExpanded: false))
         XCTAssertTrue(NotchSurfaceView.shouldShowFish(isExpanded: true))
     }
+
+    func testFishUsesBlackBackgroundInBothStates() {
+        XCTAssertTrue(NotchSurfaceView.shouldUseFishBackground(isExpanded: false))
+        XCTAssertTrue(NotchSurfaceView.shouldUseFishBackground(isExpanded: true))
+    }
 }

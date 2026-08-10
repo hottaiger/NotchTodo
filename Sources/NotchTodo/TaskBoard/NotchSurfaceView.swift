@@ -8,10 +8,13 @@ struct NotchSurfaceView: View {
     let isNotchAttached: Bool
 
     static func shouldShowFish(isExpanded _: Bool) -> Bool { true }
+    static func shouldUseFishBackground(isExpanded _: Bool) -> Bool { true }
 
     private var fishLeadingInset: CGFloat {
         controller.isExpanded && isNotchAttached ? 18 : 2
     }
+
+    private var fishBackgroundLeadingInset: CGFloat { fishLeadingInset - 2 }
 
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -28,12 +31,18 @@ struct NotchSurfaceView: View {
                         Button("退出 NotchTodo", role: .destructive) { NSApp.terminate(nil) }
                     }
             }
+            if Self.shouldUseFishBackground(isExpanded: controller.isExpanded) {
+                Color.black
+                    .frame(width: 32, height: 38)
+                    .padding(.leading, fishBackgroundLeadingInset)
+                    .allowsHitTesting(false)
+            }
             if Self.shouldShowFish(isExpanded: controller.isExpanded) {
                 PixelFishView(
                     collapseAnimationID: controller.collapseAnimationID,
                     shouldReduceMotion: NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
                 )
-            .padding(.leading, fishLeadingInset)
+                .padding(.leading, fishLeadingInset)
                 .padding(.top, 10)
                 .allowsHitTesting(false)
             }
