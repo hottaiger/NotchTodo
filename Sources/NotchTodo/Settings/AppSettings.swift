@@ -17,7 +17,8 @@ enum ShortcutChoice: String, CaseIterable, Identifiable {
 
 @MainActor
 final class AppSettings: ObservableObject {
-    @AppStorage("autoCollapseSeconds") var autoCollapseSeconds = 5.0
+    static let defaultAutoCollapseSeconds = 10.0
+    @AppStorage("autoCollapseSeconds") var autoCollapseSeconds = AppSettings.defaultAutoCollapseSeconds
     @AppStorage("showsTaskCount") var showsTaskCount = true
     @AppStorage("externalDisplayPlacement") var externalDisplayPlacementRaw = ExternalDisplayPlacement.center.rawValue
     @AppStorage("launchAtLogin") var launchAtLogin = false

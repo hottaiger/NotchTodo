@@ -3,6 +3,10 @@ import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 
+enum StatusBarIcon {
+    static let symbolName = "fish.fill"
+}
+
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private(set) var settings = AppSettings()
@@ -34,7 +38,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func installStatusItem() {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        item.button?.title = "✓"
+        item.button?.image = NSImage(systemSymbolName: StatusBarIcon.symbolName, accessibilityDescription: "NotchTodo")
+        item.button?.title = ""
         item.button?.toolTip = "NotchTodo"
         item.button?.setAccessibilityLabel("NotchTodo")
         let menu = NSMenu()

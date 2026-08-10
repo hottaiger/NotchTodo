@@ -6,4 +6,12 @@ final class SettingsTests: XCTestCase {
         XCTAssertEqual(ShortcutChoice.defaultChoice, .optionReturn)
         XCTAssertEqual(ShortcutChoice.optionReturn.title, "Option + Enter")
     }
+
+    @MainActor func testDefaultAutoCollapseIsTenSeconds() {
+        XCTAssertEqual(AppSettings.defaultAutoCollapseSeconds, 10, accuracy: 0.001)
+    }
+
+    func testStatusBarUsesFishIcon() {
+        XCTAssertEqual(StatusBarIcon.symbolName, "fish.fill")
+    }
 }

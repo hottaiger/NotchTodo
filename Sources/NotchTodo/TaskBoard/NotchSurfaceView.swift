@@ -1,5 +1,13 @@
 import SwiftUI
 
+enum CapsuleSummaryText {
+    static func title(from titles: [String]) -> String {
+        guard let first = titles.first, !first.isEmpty else { return "暂无待办" }
+        let prefix = String(first.prefix(5))
+        return first.count > 5 ? "\(prefix)…" : prefix
+    }
+}
+
 struct NotchSurfaceView: View {
     @ObservedObject var controller: NotchPanelController
     @ObservedObject var store: TaskStore
@@ -61,7 +69,12 @@ private struct CapsuleSummaryView: View {
     var body: some View {
         let summary = HStack(spacing: 8) {
             Circle().fill(color(for: highestPriority)).frame(width: 7, height: 7)
-            if showsCount { Text("\(store.activeTasks.count) 项待办").font(.system(size: 12, weight: .semibold)) }
+            if showsCount {
+                Text(CapsuleSummaryText.title(from: store.activeTasks.map(\.title)))
+                    .font(.system(size: 12, weight: .semibold))
+            } else {
+                Text("\(store.activeTasks.count) 项待办").font(.system(size: 12, weight: .semibold))
+            }
         }
         .foregroundStyle(.white)
 
