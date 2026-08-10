@@ -6,13 +6,17 @@ final class PanelTransitionPhaseTests: XCTestCase {
         XCTAssertNotEqual(PanelTransitionPhase.collapsed, .collapsing)
     }
 
-    func testFishRemainsVisibleWhenBoardIsExpanded() {
+    func testFishIsHiddenWhenBoardIsExpanded() {
         XCTAssertTrue(NotchSurfaceView.shouldShowFish(isExpanded: false))
-        XCTAssertTrue(NotchSurfaceView.shouldShowFish(isExpanded: true))
+        XCTAssertFalse(NotchSurfaceView.shouldShowFish(isExpanded: true))
     }
 
-    func testFishUsesBlackBackgroundInBothStates() {
+    func testFishBackgroundIsHiddenWhenBoardIsExpanded() {
         XCTAssertTrue(NotchSurfaceView.shouldUseFishBackground(isExpanded: false))
-        XCTAssertTrue(NotchSurfaceView.shouldUseFishBackground(isExpanded: true))
+        XCTAssertFalse(NotchSurfaceView.shouldUseFishBackground(isExpanded: true))
+    }
+
+    func testFishShakeStartsAfterEightHundredMilliseconds() {
+        XCTAssertEqual(PixelFishView.collapseShakeDelay, 0.8, accuracy: 0.001)
     }
 }

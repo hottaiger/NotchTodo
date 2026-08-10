@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct PixelFishView: View {
+    static let collapseShakeDelay: TimeInterval = 0.8
     let collapseAnimationID: UInt
     let shouldReduceMotion: Bool
     @State private var horizontalOffset: CGFloat = 0
@@ -33,10 +34,10 @@ struct PixelFishView: View {
         cancelShake()
         guard !shouldReduceMotion else { return }
 
-        scheduleShake(offset: -2, after: 0, duration: 0.045)
-        scheduleShake(offset: 2, after: 0.045, duration: 0.055)
-        scheduleShake(offset: -1, after: 0.10, duration: 0.04)
-        scheduleShake(offset: 0, after: 0.14, duration: 0.04)
+        scheduleShake(offset: -2, after: Self.collapseShakeDelay, duration: 0.045)
+        scheduleShake(offset: 2, after: Self.collapseShakeDelay + 0.045, duration: 0.055)
+        scheduleShake(offset: -1, after: Self.collapseShakeDelay + 0.10, duration: 0.04)
+        scheduleShake(offset: 0, after: Self.collapseShakeDelay + 0.14, duration: 0.04)
     }
 
     private func scheduleShake(offset: CGFloat, after delay: TimeInterval, duration: TimeInterval) {

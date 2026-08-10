@@ -31,9 +31,9 @@ struct DisplayPlacementResolver {
         let fishFootprint = fishWidth + fishSpacing
         if screen.safeAreaInsets.top > 0, let right = screen.auxiliaryTopRightArea {
             return NSRect(
-                x: right.minX - 2,
+                x: right.minX - 18,
                 y: right.minY,
-                width: capsuleWidth + fishFootprint,
+                width: capsuleWidth + fishFootprint + 18,
                 height: right.height
             )
         }
