@@ -1,8 +1,14 @@
 import XCTest
+import AppKit
 import SwiftData
 @testable import NotchTodo
 
 final class TaskStoreTests: XCTestCase {
+    func testCopyTitleWritesToGeneralPasteboard() throws {
+        TaskTitleClipboard.copy("SFE-42281")
+        XCTAssertEqual(NSPasteboard.general.string(forType: .string), "SFE-42281")
+    }
+
     @MainActor
     private func makeStore() throws -> TaskStore {
         let configuration = ModelConfiguration(isStoredInMemoryOnly: true)

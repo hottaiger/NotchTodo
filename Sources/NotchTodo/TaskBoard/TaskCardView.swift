@@ -1,4 +1,12 @@
+import AppKit
 import SwiftUI
+
+enum TaskTitleClipboard {
+    static func copy(_ title: String) {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(title, forType: .string)
+    }
+}
 
 struct TaskCardView: View {
     let task: TodoTask
@@ -23,6 +31,17 @@ struct TaskCardView: View {
                 }
             }
             Spacer(minLength: 0)
+            Button {
+                TaskTitleClipboard.copy(task.title)
+                activity()
+            } label: {
+                Image(systemName: "doc.on.doc")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.secondary)
+            }
+            .buttonStyle(.plain)
+            .help("复制标题")
+            .accessibilityLabel("复制待办标题：(task.title)")
         }
         .padding(7)
         .background(.background.opacity(0.55), in: RoundedRectangle(cornerRadius: 9, style: .continuous))

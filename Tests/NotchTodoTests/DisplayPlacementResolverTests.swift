@@ -2,6 +2,15 @@ import XCTest
 @testable import NotchTodo
 
 final class DisplayPlacementResolverTests: XCTestCase {
+    func testPreferredScreenUsesNotchedDisplayWhenConnected() {
+        let screens = NSScreen.screens
+        let preferred = DisplayPlacementResolver.preferredScreen(from: screens)
+        guard let notchedScreen = screens.max(by: { $0.safeAreaInsets.top < $1.safeAreaInsets.top }) else {
+            return XCTFail("Expected at least one screen")
+        }
+        XCTAssertEqual(preferred, notchedScreen)
+    }
+
     func testCollapsedFrameUsesRequestedWidthAndHeight() {
         let screen = NSScreen.main!
         let frame = DisplayPlacementResolver.collapsedFrame(on: screen, width: 104, height: 34)
@@ -9,6 +18,20 @@ final class DisplayPlacementResolverTests: XCTestCase {
             XCTAssertEqual(frame.size, CGSize(width: 104, height: 34))
         } else {
             XCTAssertEqual(frame, DisplayPlacementResolver.notchRightFrame(on: screen, width: 104)!)
+        }
+    }
+
+    func testCollapsedSurfaceOverlapsNotchBeforeTheFishBackground() {
+        let screen = NSScreen.main!
+        let surface = DisplayPlacementResolver.collapsedSurfaceFrame(on: screen)
+
+        if let right = screen.auxiliaryTopRightArea {
+            XCTAssertEqual(surface.minX, right.minX - 18, accuracy: 0.5)
+            XCTAssertEqual(surface.minX + 50, right.minX + 32, accuracy: 0.5)
+            XCTAssertEqual(surface.width, 154, accuracy: 0.5)
+            XCTAssertEqual(surface.height, right.height, accuracy: 0.5)
+        } else {
+            XCTAssertEqual(surface.width, 136, accuracy: 0.5)
         }
     }
 
@@ -31,5 +54,12 @@ final class DisplayPlacementResolverTests: XCTestCase {
 
     func testNotchPanelFloatsAboveMenuBarToReceiveClicks() {
         XCTAssertGreaterThan(NotchPanelWindow(contentRect: .zero).level.rawValue, NSWindow.Level.mainMenu.rawValue)
+    }
+
+    func testNotchPanelDoesNotConstrainNotchFrameAfterDisplayChange() {
+        let screen = NSScreen.main!
+        let desiredFrame = DisplayPlacementResolver.collapsedFrame(on: screen)
+        let panel = NotchPanelWindow(contentRect: desiredFrame)
+        XCTAssertEqual(panel.constrainFrameRect(desiredFrame, to: screen), desiredFrame)
     }
 }

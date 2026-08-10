@@ -1,4 +1,5 @@
 .build/
+.superpowers/
 .DS_Store
 DerivedData/
 *.xcuserstate

@@ -7,10 +7,44 @@ struct NotchSurfaceView: View {
     let usesTrailingSummaryLayout: Bool
     let isNotchAttached: Bool
 
+    static func shouldShowFish(isExpanded: Bool) -> Bool { !isExpanded }
+    static func shouldUseFishBackground(isExpanded: Bool) -> Bool { !isExpanded }
+
+    private var fishLeadingInset: CGFloat {
+        isNotchAttached ? 18 : 2
+    }
+
+    private var fishBackgroundWidth: CGFloat { isNotchAttached ? 50 : 32 }
+
     var body: some View {
-        Group {
-            if controller.isExpanded { TaskBoardView(store: store, controller: controller) }
-            else { CapsuleSummaryView(store: store, showsCount: settings.showsTaskCount, usesTrailingSummaryLayout: usesTrailingSummaryLayout, isNotchAttached: isNotchAttached).onTapGesture { controller.expand() }.contextMenu { Button("打开待办看板") { controller.expand() }; Divider(); Button("退出 NotchTodo", role: .destructive) { NSApp.terminate(nil) } } }
+        ZStack(alignment: .topLeading) {
+            if controller.isExpanded {
+                TaskBoardView(store: store, controller: controller)
+            } else {
+                CapsuleSummaryView(store: store, showsCount: settings.showsTaskCount, usesTrailingSummaryLayout: usesTrailingSummaryLayout, isNotchAttached: isNotchAttached)
+                    .frame(width: 104)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+                    .onTapGesture { controller.expand() }
+                    .contextMenu {
+                        Button("打开待办看板") { controller.expand() }
+                        Divider()
+                        Button("退出 NotchTodo", role: .destructive) { NSApp.terminate(nil) }
+                    }
+            }
+            if Self.shouldUseFishBackground(isExpanded: controller.isExpanded) {
+                Color.black
+                    .frame(width: fishBackgroundWidth, height: 38)
+                    .allowsHitTesting(false)
+            }
+            if Self.shouldShowFish(isExpanded: controller.isExpanded) {
+                PixelFishView(
+                    collapseAnimationID: controller.collapseAnimationID,
+                    shouldReduceMotion: NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+                )
+                .padding(.leading, fishLeadingInset)
+                .padding(.top, 10)
+                .allowsHitTesting(false)
+            }
         }
         .animation(.spring(response: 0.22, dampingFraction: 0.86), value: controller.isExpanded)
     }
@@ -40,7 +74,7 @@ private struct CapsuleSummaryView: View {
         .clipShape(NotchAttachedCapsuleShape(
             leadingRadius: isNotchAttached ? 0 : 10,
             topTrailingRadius: isNotchAttached ? 0 : 10,
-            bottomTrailingRadius: isNotchAttached ? 7 : 10
+            isNotchAttached: isNotchAttached
         ))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("NotchTodo，\(store.activeTasks.count) 项未完成任务")
@@ -52,15 +86,22 @@ private struct CapsuleSummaryView: View {
     }
 }
 
-private struct NotchAttachedCapsuleShape: Shape {
+struct NotchAttachedCapsuleShape: Shape {
     let leadingRadius: CGFloat
     let topTrailingRadius: CGFloat
-    let bottomTrailingRadius: CGFloat
+    let isNotchAttached: Bool
+
+    static func bottomTrailingRadius(isNotchAttached: Bool, height: CGFloat) -> CGFloat {
+        isNotchAttached ? min(14, height / 2) : 10
+    }
 
     func path(in rect: CGRect) -> Path {
         let leadingRadius = min(leadingRadius, rect.height / 2)
         let topTrailingRadius = min(topTrailingRadius, rect.height / 2)
-        let bottomTrailingRadius = min(bottomTrailingRadius, rect.height / 2)
+        let bottomTrailingRadius = min(
+            Self.bottomTrailingRadius(isNotchAttached: isNotchAttached, height: rect.height),
+            rect.height / 2
+        )
         var path = Path()
         path.move(to: CGPoint(x: rect.minX + leadingRadius, y: rect.minY))
         path.addLine(to: CGPoint(x: rect.maxX - topTrailingRadius, y: rect.minY))
