@@ -8,9 +8,27 @@ struct NotchSurfaceView: View {
     let isNotchAttached: Bool
 
     var body: some View {
-        Group {
-            if controller.isExpanded { TaskBoardView(store: store, controller: controller) }
-            else { CapsuleSummaryView(store: store, showsCount: settings.showsTaskCount, usesTrailingSummaryLayout: usesTrailingSummaryLayout, isNotchAttached: isNotchAttached).onTapGesture { controller.expand() }.contextMenu { Button("打开待办看板") { controller.expand() }; Divider(); Button("退出 NotchTodo", role: .destructive) { NSApp.terminate(nil) } } }
+        ZStack(alignment: .topLeading) {
+            if controller.isExpanded {
+                TaskBoardView(store: store, controller: controller)
+            } else {
+                CapsuleSummaryView(store: store, showsCount: settings.showsTaskCount, usesTrailingSummaryLayout: usesTrailingSummaryLayout, isNotchAttached: isNotchAttached)
+                    .frame(width: 104)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+                    .onTapGesture { controller.expand() }
+                    .contextMenu {
+                        Button("打开待办看板") { controller.expand() }
+                        Divider()
+                        Button("退出 NotchTodo", role: .destructive) { NSApp.terminate(nil) }
+                    }
+            }
+            PixelFishView(
+                collapseAnimationID: controller.collapseAnimationID,
+                shouldReduceMotion: NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+            )
+            .padding(.leading, 2)
+            .padding(.top, 10)
+            .allowsHitTesting(false)
         }
         .animation(.spring(response: 0.22, dampingFraction: 0.86), value: controller.isExpanded)
     }

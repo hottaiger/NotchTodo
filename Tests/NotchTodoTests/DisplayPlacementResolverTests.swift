@@ -2,6 +2,15 @@ import XCTest
 @testable import NotchTodo
 
 final class DisplayPlacementResolverTests: XCTestCase {
+    func testPreferredScreenUsesNotchedDisplayWhenConnected() {
+        let screens = NSScreen.screens
+        let preferred = DisplayPlacementResolver.preferredScreen(from: screens)
+        guard let notchedScreen = screens.max(by: { $0.safeAreaInsets.top < $1.safeAreaInsets.top }) else {
+            return XCTFail("Expected at least one screen")
+        }
+        XCTAssertEqual(preferred, notchedScreen)
+    }
+
     func testCollapsedFrameUsesRequestedWidthAndHeight() {
         let screen = NSScreen.main!
         let frame = DisplayPlacementResolver.collapsedFrame(on: screen, width: 104, height: 34)
@@ -31,5 +40,12 @@ final class DisplayPlacementResolverTests: XCTestCase {
 
     func testNotchPanelFloatsAboveMenuBarToReceiveClicks() {
         XCTAssertGreaterThan(NotchPanelWindow(contentRect: .zero).level.rawValue, NSWindow.Level.mainMenu.rawValue)
+    }
+
+    func testNotchPanelDoesNotConstrainNotchFrameAfterDisplayChange() {
+        let screen = NSScreen.main!
+        let desiredFrame = DisplayPlacementResolver.collapsedFrame(on: screen)
+        let panel = NotchPanelWindow(contentRect: desiredFrame)
+        XCTAssertEqual(panel.constrainFrameRect(desiredFrame, to: screen), desiredFrame)
     }
 }

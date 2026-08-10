@@ -1,6 +1,15 @@
 import AppKit
 
 struct DisplayPlacementResolver {
+    static func preferredScreen(from screens: [NSScreen] = NSScreen.screens, fallback: NSScreen? = NSScreen.main) -> NSScreen? {
+        screens.max { lhs, rhs in
+            if lhs.safeAreaInsets.top != rhs.safeAreaInsets.top {
+                return lhs.safeAreaInsets.top < rhs.safeAreaInsets.top
+            }
+            return lhs.frame.width < rhs.frame.width
+        } ?? fallback
+    }
+
     static func collapsedFrame(on screen: NSScreen, width: CGFloat = 104, height: CGFloat = 34, placement: ExternalDisplayPlacement = .center) -> NSRect {
         if let notchFrame = notchRightFrame(on: screen, width: width) { return notchFrame }
         let visible = screen.visibleFrame
