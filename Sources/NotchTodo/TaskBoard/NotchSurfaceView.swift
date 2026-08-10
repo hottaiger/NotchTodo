@@ -74,7 +74,7 @@ private struct CapsuleSummaryView: View {
         .clipShape(NotchAttachedCapsuleShape(
             leadingRadius: isNotchAttached ? 0 : 10,
             topTrailingRadius: isNotchAttached ? 0 : 10,
-            bottomTrailingRadius: isNotchAttached ? 7 : 10
+            isNotchAttached: isNotchAttached
         ))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("NotchTodo，\(store.activeTasks.count) 项未完成任务")
@@ -86,15 +86,22 @@ private struct CapsuleSummaryView: View {
     }
 }
 
-private struct NotchAttachedCapsuleShape: Shape {
+struct NotchAttachedCapsuleShape: Shape {
     let leadingRadius: CGFloat
     let topTrailingRadius: CGFloat
-    let bottomTrailingRadius: CGFloat
+    let isNotchAttached: Bool
+
+    static func bottomTrailingRadius(isNotchAttached: Bool, height: CGFloat) -> CGFloat {
+        isNotchAttached ? height / 2 : 10
+    }
 
     func path(in rect: CGRect) -> Path {
         let leadingRadius = min(leadingRadius, rect.height / 2)
         let topTrailingRadius = min(topTrailingRadius, rect.height / 2)
-        let bottomTrailingRadius = min(bottomTrailingRadius, rect.height / 2)
+        let bottomTrailingRadius = min(
+            Self.bottomTrailingRadius(isNotchAttached: isNotchAttached, height: rect.height),
+            rect.height / 2
+        )
         var path = Path()
         path.move(to: CGPoint(x: rect.minX + leadingRadius, y: rect.minY))
         path.addLine(to: CGPoint(x: rect.maxX - topTrailingRadius, y: rect.minY))
