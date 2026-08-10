@@ -20,6 +20,23 @@ struct DisplayPlacementResolver {
         return NSRect(x: x, y: visible.maxY - height, width: width, height: height)
     }
 
+    static func collapsedSurfaceFrame(
+        on screen: NSScreen,
+        capsuleWidth: CGFloat = 104,
+        fishWidth: CGFloat = 28,
+        fishSpacing: CGFloat = 4,
+        placement: ExternalDisplayPlacement = .center
+    ) -> NSRect {
+        let capsule = collapsedFrame(on: screen, width: capsuleWidth, placement: placement)
+        let fishFootprint = fishWidth + fishSpacing
+        return NSRect(
+            x: capsule.minX - fishFootprint,
+            y: capsule.minY,
+            width: capsuleWidth + fishFootprint,
+            height: capsule.height
+        )
+    }
+
     static func notchRightFrame(on screen: NSScreen, width: CGFloat) -> NSRect? {
         guard screen.safeAreaInsets.top > 0,
               let right = screen.auxiliaryTopRightArea else { return nil }

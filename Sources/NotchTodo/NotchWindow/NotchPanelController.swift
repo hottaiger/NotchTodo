@@ -4,7 +4,6 @@ import SwiftUI
 @MainActor
 final class NotchPanelController: NSObject, ObservableObject {
     private static let collapsedCapsuleWidth: CGFloat = 104
-    private static let collapsedSurfaceWidth: CGFloat = 136
     @Published private(set) var isExpanded = false
     @Published private(set) var transitionPhase: PanelTransitionPhase = .collapsed
     @Published private(set) var collapseAnimationID: UInt = 0
@@ -23,7 +22,7 @@ final class NotchPanelController: NSObject, ObservableObject {
         let screen = DisplayPlacementResolver.preferredScreen() ?? NSScreen.screens[0]
         usesTrailingSummaryLayout = false
         isNotchAttached = DisplayPlacementResolver.notchRightFrame(on: screen, width: Self.collapsedCapsuleWidth) != nil
-        panel = NotchPanelWindow(contentRect: Self.collapsedFrame(on: screen, placement: settings.externalDisplayPlacement))
+        panel = NotchPanelWindow(contentRect: Self.collapsedSurfaceFrame(on: screen, placement: settings.externalDisplayPlacement))
         super.init()
         panel.contentView = NSHostingView(rootView: NotchSurfaceView(controller: self, store: store, settings: settings, usesTrailingSummaryLayout: usesTrailingSummaryLayout, isNotchAttached: isNotchAttached))
         panel.orderFrontRegardless()
@@ -68,7 +67,7 @@ final class NotchPanelController: NSObject, ObservableObject {
         collapseAnimationID &+= 1
         isExpanded = false
         inactivityTimer?.invalidate()
-        resize(to: Self.collapsedFrame(on: screen, placement: settings.externalDisplayPlacement)) { [weak self] in
+        resize(to: Self.collapsedSurfaceFrame(on: screen, placement: settings.externalDisplayPlacement)) { [weak self] in
             guard self?.isExpanded == false else { return }
             self?.transitionPhase = .collapsed
         }
@@ -80,7 +79,7 @@ final class NotchPanelController: NSObject, ObservableObject {
         let screen = DisplayPlacementResolver.preferredScreen() ?? NSScreen.screens[0]
         let frame = isExpanded
             ? DisplayPlacementResolver.expandedFrame(on: screen, placement: settings.externalDisplayPlacement)
-            : Self.collapsedFrame(on: screen, placement: settings.externalDisplayPlacement)
+            : Self.collapsedSurfaceFrame(on: screen, placement: settings.externalDisplayPlacement)
         panel.setFrame(frame, display: true)
     }
 
@@ -92,10 +91,10 @@ final class NotchPanelController: NSObject, ObservableObject {
         }
     }
 
-    private static func collapsedFrame(on screen: NSScreen, placement: ExternalDisplayPlacement) -> NSRect {
-        DisplayPlacementResolver.collapsedFrame(
+    private static func collapsedSurfaceFrame(on screen: NSScreen, placement: ExternalDisplayPlacement) -> NSRect {
+        DisplayPlacementResolver.collapsedSurfaceFrame(
             on: screen,
-            width: Self.collapsedSurfaceWidth,
+            capsuleWidth: Self.collapsedCapsuleWidth,
             placement: placement
         )
     }
