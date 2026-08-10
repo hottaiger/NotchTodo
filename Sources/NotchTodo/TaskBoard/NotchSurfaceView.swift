@@ -7,6 +7,8 @@ struct NotchSurfaceView: View {
     let usesTrailingSummaryLayout: Bool
     let isNotchAttached: Bool
 
+    static func shouldShowFish(isExpanded: Bool) -> Bool { !isExpanded }
+
     var body: some View {
         ZStack(alignment: .topLeading) {
             if controller.isExpanded {
@@ -22,13 +24,15 @@ struct NotchSurfaceView: View {
                         Button("退出 NotchTodo", role: .destructive) { NSApp.terminate(nil) }
                     }
             }
-            PixelFishView(
-                collapseAnimationID: controller.collapseAnimationID,
-                shouldReduceMotion: NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
-            )
-            .padding(.leading, 2)
-            .padding(.top, 10)
-            .allowsHitTesting(false)
+            if Self.shouldShowFish(isExpanded: controller.isExpanded) {
+                PixelFishView(
+                    collapseAnimationID: controller.collapseAnimationID,
+                    shouldReduceMotion: NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+                )
+                .padding(.leading, 2)
+                .padding(.top, 10)
+                .allowsHitTesting(false)
+            }
         }
         .animation(.spring(response: 0.22, dampingFraction: 0.86), value: controller.isExpanded)
     }

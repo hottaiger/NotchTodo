@@ -21,6 +21,9 @@ struct PixelFishView: View {
         .onChange(of: collapseAnimationID) { _, _ in
             shakeIfAllowed()
         }
+        .onAppear {
+            if collapseAnimationID > 0 { shakeIfAllowed() }
+        }
         .onDisappear {
             cancelShake()
         }
