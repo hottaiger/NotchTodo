@@ -3,8 +3,15 @@ import SwiftUI
 enum CapsuleSummaryText {
     static func title(from titles: [String]) -> String {
         guard let first = titles.first, !first.isEmpty else { return "暂无待办" }
-        let prefix = String(first.prefix(5))
-        return first.count > 5 ? "\(prefix)..." : prefix
+        var usedUnits = 0.0
+        var prefix = ""
+        for character in first {
+            let units = character.unicodeScalars.allSatisfy { $0.value <= 0x7F } ? 0.5 : 1.0
+            guard usedUnits + units <= 5 else { break }
+            prefix.append(character)
+            usedUnits += units
+        }
+        return prefix == first ? prefix : "\(prefix)..."
     }
 }
 
