@@ -21,14 +21,17 @@ final class DisplayPlacementResolverTests: XCTestCase {
         }
     }
 
-    func testCollapsedSurfacePlacesFishToTheLeftOfAttachedCapsule() {
+    func testCollapsedSurfacePlacesFishToTheRightOfTheNotch() {
         let screen = NSScreen.main!
-        let capsule = DisplayPlacementResolver.collapsedFrame(on: screen, width: 104)
         let surface = DisplayPlacementResolver.collapsedSurfaceFrame(on: screen)
 
-        XCTAssertEqual(surface.maxX, capsule.maxX, accuracy: 0.5)
-        XCTAssertEqual(surface.minX + 32, capsule.minX, accuracy: 0.5)
-        XCTAssertEqual(surface.height, capsule.height, accuracy: 0.5)
+        if let right = screen.auxiliaryTopRightArea {
+            XCTAssertEqual(surface.minX, right.minX - 2, accuracy: 0.5)
+            XCTAssertGreaterThanOrEqual(surface.minX + 32, right.minX)
+            XCTAssertEqual(surface.height, right.height, accuracy: 0.5)
+        } else {
+            XCTAssertEqual(surface.width, 136, accuracy: 0.5)
+        }
     }
 
     func testNotchFrameUsesRightSafeAuxiliaryArea() {

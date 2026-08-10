@@ -29,6 +29,14 @@ struct DisplayPlacementResolver {
     ) -> NSRect {
         let capsule = collapsedFrame(on: screen, width: capsuleWidth, placement: placement)
         let fishFootprint = fishWidth + fishSpacing
+        if screen.safeAreaInsets.top > 0, let right = screen.auxiliaryTopRightArea {
+            return NSRect(
+                x: right.minX - 2,
+                y: right.minY,
+                width: capsuleWidth + fishFootprint,
+                height: right.height
+            )
+        }
         return NSRect(
             x: capsule.minX - fishFootprint,
             y: capsule.minY,

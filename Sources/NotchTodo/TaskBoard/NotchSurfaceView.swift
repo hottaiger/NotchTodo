@@ -7,7 +7,11 @@ struct NotchSurfaceView: View {
     let usesTrailingSummaryLayout: Bool
     let isNotchAttached: Bool
 
-    static func shouldShowFish(isExpanded: Bool) -> Bool { !isExpanded }
+    static func shouldShowFish(isExpanded _: Bool) -> Bool { true }
+
+    private var fishLeadingInset: CGFloat {
+        controller.isExpanded && isNotchAttached ? 18 : 2
+    }
 
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -29,7 +33,7 @@ struct NotchSurfaceView: View {
                     collapseAnimationID: controller.collapseAnimationID,
                     shouldReduceMotion: NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
                 )
-                .padding(.leading, 2)
+            .padding(.leading, fishLeadingInset)
                 .padding(.top, 10)
                 .allowsHitTesting(false)
             }

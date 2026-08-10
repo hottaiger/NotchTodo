@@ -6,8 +6,8 @@ final class PanelTransitionPhaseTests: XCTestCase {
         XCTAssertNotEqual(PanelTransitionPhase.collapsed, .collapsing)
     }
 
-    func testFishIsHiddenWhenBoardIsExpanded() {
+    func testFishRemainsVisibleWhenBoardIsExpanded() {
         XCTAssertTrue(NotchSurfaceView.shouldShowFish(isExpanded: false))
-        XCTAssertFalse(NotchSurfaceView.shouldShowFish(isExpanded: true))
+        XCTAssertTrue(NotchSurfaceView.shouldShowFish(isExpanded: true))
     }
 }
