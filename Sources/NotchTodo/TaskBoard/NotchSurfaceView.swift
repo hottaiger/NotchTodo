@@ -92,7 +92,7 @@ struct NotchAttachedCapsuleShape: Shape {
     let isNotchAttached: Bool
 
     static func bottomTrailingRadius(isNotchAttached: Bool, height: CGFloat) -> CGFloat {
-        isNotchAttached ? height / 2 : 10
+        isNotchAttached ? min(14, height / 2) : 10
     }
 
     func path(in rect: CGRect) -> Path {
