@@ -9,8 +9,9 @@ enum ExternalDisplayPlacement: String, CaseIterable, Identifiable {
 
 enum ShortcutChoice: String, CaseIterable, Identifiable {
     case optionSpace, optionReturn
+    static let defaultChoice: ShortcutChoice = .optionReturn
     var id: String { rawValue }
-    var title: String { self == .optionSpace ? "Option + Space" : "Option + Return" }
+    var title: String { self == .optionSpace ? "Option + Space" : "Option + Enter" }
     var keyCode: UInt32 { self == .optionSpace ? 49 : 36 }
 }
 
@@ -20,7 +21,7 @@ final class AppSettings: ObservableObject {
     @AppStorage("showsTaskCount") var showsTaskCount = true
     @AppStorage("externalDisplayPlacement") var externalDisplayPlacementRaw = ExternalDisplayPlacement.center.rawValue
     @AppStorage("launchAtLogin") var launchAtLogin = false
-    @AppStorage("shortcutChoice") var shortcutChoiceRaw = ShortcutChoice.optionSpace.rawValue
+    @AppStorage("shortcutChoice") var shortcutChoiceRaw = ShortcutChoice.defaultChoice.rawValue
 
     var externalDisplayPlacement: ExternalDisplayPlacement {
         get { ExternalDisplayPlacement(rawValue: externalDisplayPlacementRaw) ?? .center }
@@ -28,7 +29,7 @@ final class AppSettings: ObservableObject {
     }
 
     var shortcutChoice: ShortcutChoice {
-        get { ShortcutChoice(rawValue: shortcutChoiceRaw) ?? .optionSpace }
+        get { ShortcutChoice(rawValue: shortcutChoiceRaw) ?? .defaultChoice }
         set { shortcutChoiceRaw = newValue.rawValue }
     }
 }
