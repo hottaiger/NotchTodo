@@ -3,7 +3,7 @@ import SwiftUI
 struct PixelFishView: View {
     static let collapseShakeDelay: TimeInterval = 0.5
     static let bubbleCooldown: TimeInterval = 15
-    private static let bubbleSequenceDuration: TimeInterval = 0.9
+    static let bubbleSequenceDuration: TimeInterval = 3
     let collapseAnimationID: UInt
     let shouldReduceMotion: Bool
     @State private var horizontalOffset: CGFloat = 0
@@ -21,8 +21,8 @@ struct PixelFishView: View {
             }
             for bubble in Self.bubbles(progress: bubbleProgress) {
                 context.fill(
-                    Path(CGRect(x: bubble.x, y: bubble.y, width: 2, height: 2)),
-                    with: .color(Color.white.opacity(bubble.opacity))
+                    Path(CGRect(x: bubble.x, y: bubble.y, width: 4, height: 4)),
+                    with: .color(Color(red: 0.72, green: 1, blue: 0.98).opacity(bubble.opacity))
                 )
             }
         }
@@ -129,7 +129,7 @@ struct PixelFishView: View {
         let secondProgress = min(max((progress - 0.3) / 0.7, 0), 1)
         return [
             (24, 4 - firstProgress * 5, Double(1 - firstProgress)),
-            (26, 8 - secondProgress * 7, Double(1 - secondProgress))
+            (20, 8 - secondProgress * 7, Double(1 - secondProgress))
         ].filter { $0.opacity > 0 }
     }
 }
