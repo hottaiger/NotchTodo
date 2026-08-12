@@ -2,14 +2,10 @@ import SwiftUI
 
 struct PixelFishView: View {
     static let collapseShakeDelay: TimeInterval = 0.5
-    static let bubbleCooldown: TimeInterval = 15
-    private static let bubbleSequenceDuration: TimeInterval = 0.9
     let collapseAnimationID: UInt
     let shouldReduceMotion: Bool
     @State private var horizontalOffset: CGFloat = 0
     @State private var shakeWorkItems: [DispatchWorkItem] = []
-    @State private var bubbleProgress: CGFloat = 0
-    @State private var bubbleWorkItem: DispatchWorkItem?
 
     var body: some View {
         Canvas { context, _ in
@@ -17,12 +13,6 @@ struct PixelFishView: View {
                 context.fill(
                     Path(CGRect(x: pixel.x, y: pixel.y, width: 4, height: 4)),
                     with: .color(pixel.color)
-                )
-            }
-            for bubble in Self.bubbles(progress: bubbleProgress) {
-                context.fill(
-                    Path(CGRect(x: bubble.x, y: bubble.y, width: 2, height: 2)),
-                    with: .color(Color.white.opacity(bubble.opacity))
                 )
             }
         }
@@ -34,16 +24,10 @@ struct PixelFishView: View {
         }
         .onAppear {
             if collapseAnimationID > 0 { shakeIfAllowed() }
-            startBubblesIfAllowed()
         }
         .onDisappear {
             cancelShake()
-            cancelBubbles()
         }
-    }
-
-    static func shouldAnimateBubbles(shouldReduceMotion: Bool) -> Bool {
-        !shouldReduceMotion
     }
 
     private func shakeIfAllowed() {
@@ -72,35 +56,6 @@ struct PixelFishView: View {
         horizontalOffset = 0
     }
 
-    private func startBubblesIfAllowed() {
-        cancelBubbles()
-        guard Self.shouldAnimateBubbles(shouldReduceMotion: shouldReduceMotion) else { return }
-        emitBubbleSequence()
-    }
-
-    private func emitBubbleSequence() {
-        bubbleProgress = 0
-        withAnimation(.linear(duration: Self.bubbleSequenceDuration)) {
-            bubbleProgress = 1
-        }
-        scheduleNextBubbleSequence(after: Self.bubbleSequenceDuration + Self.bubbleCooldown)
-    }
-
-    private func scheduleNextBubbleSequence(after delay: TimeInterval) {
-        let workItem = DispatchWorkItem {
-            bubbleWorkItem = nil
-            emitBubbleSequence()
-        }
-        bubbleWorkItem = workItem
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: workItem)
-    }
-
-    private func cancelBubbles() {
-        bubbleWorkItem?.cancel()
-        bubbleWorkItem = nil
-        bubbleProgress = 0
-    }
-
     private static let pixels: [(x: CGFloat, y: CGFloat, color: Color)] = [
         (0, 4, Color(red: 0.19, green: 0.50, blue: 0.58)),
         (0, 8, Color(red: 0.19, green: 0.50, blue: 0.58)),
@@ -123,13 +78,4 @@ struct PixelFishView: View {
         (24, 4, Color(red: 0.33, green: 0.85, blue: 0.82)),
         (24, 8, Color(red: 0.33, green: 0.85, blue: 0.82))
     ]
-
-    private static func bubbles(progress: CGFloat) -> [(x: CGFloat, y: CGFloat, opacity: Double)] {
-        let firstProgress = min(max(progress, 0), 1)
-        let secondProgress = min(max((progress - 0.3) / 0.7, 0), 1)
-        return [
-            (24, 4 - firstProgress * 5, Double(1 - firstProgress)),
-            (26, 8 - secondProgress * 7, Double(1 - secondProgress))
-        ].filter { $0.opacity > 0 }
-    }
 }
