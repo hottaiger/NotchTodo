@@ -28,3 +28,20 @@ swift run
 zsh scripts/build-app.sh
 open .build/release/NotchTodo.app
 ```
+
+## 安装与分发
+
+当前发布包为 Apple Silicon（M 系列芯片）版本。没有 Apple Developer 签名和公证时，macOS 会对从浏览器、微信等渠道下载的 App 标记隔离属性；这不是压缩包损坏。
+
+下载并解压后，先在 Finder 中右键 `NotchTodo.app`，选择“打开”，再在系统确认框中选择“打开”。
+
+若仍提示“已损坏”或无法打开，请仅在确认来源可信时执行：
+
+```bash
+xattr -dr com.apple.quarantine ~/Downloads/NotchTodo.app
+open ~/Downloads/NotchTodo.app
+```
+
+如果 App 不在“下载”目录，请将命令中的路径替换为实际路径。
+
+面向普通用户正式发布时，需要使用 Apple Developer 的 `Developer ID Application` 证书签名，并提交 Apple 公证；完成后即可正常双击安装，无需上述操作。
