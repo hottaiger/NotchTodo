@@ -10,7 +10,7 @@ enum TaskTitleClipboard {
 
 struct TaskCardView: View {
     let task: TodoTask
-    @ObservedObject var store: TaskStore
+    let store: TaskStore
     @Binding var editorTask: TodoTask?
     let activity: () -> Void
 

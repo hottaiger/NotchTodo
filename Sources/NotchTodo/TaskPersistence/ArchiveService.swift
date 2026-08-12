@@ -5,8 +5,9 @@ import SwiftData
 enum ArchiveService {
     static func archiveCompletedTasks(in context: ModelContext, now: Date = .now) throws {
         let endOfPreviousDay = Calendar.current.startOfDay(for: now)
-        let tasks = try context.fetch(FetchDescriptor<TodoTask>())
-        for task in tasks where task.completedAt != nil && task.archivedAt == nil && task.completedAt! < endOfPreviousDay {
+        let descriptor = FetchDescriptor<TodoTask>(predicate: #Predicate { $0.archivedAt == nil })
+        let tasks = try context.fetch(descriptor)
+        for task in tasks where task.completedAt.map({ $0 < endOfPreviousDay }) == true {
             task.archivedAt = now
         }
         try context.save()
@@ -14,7 +15,8 @@ enum ArchiveService {
 
     static func purgeExpiredArchives(in context: ModelContext, now: Date = .now) throws {
         let deadline = Calendar.current.date(byAdding: .day, value: -30, to: now)!
-        let tasks = try context.fetch(FetchDescriptor<TodoTask>())
+        let descriptor = FetchDescriptor<TodoTask>(predicate: #Predicate { $0.archivedAt != nil })
+        let tasks = try context.fetch(descriptor)
         for task in tasks where task.archivedAt.map({ $0 < deadline }) == true {
             context.delete(task)
         }

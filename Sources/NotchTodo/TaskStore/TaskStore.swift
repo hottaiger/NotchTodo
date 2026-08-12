@@ -5,6 +5,8 @@ import Combine
 @MainActor
 final class TaskStore: ObservableObject {
     @Published private(set) var tasks: [TodoTask] = []
+    @Published private(set) var activeTasks: [TodoTask] = []
+    @Published private(set) var completedTasks: [TodoTask] = []
     @Published private(set) var saveError: String?
     let context: ModelContext
 
@@ -12,9 +14,6 @@ final class TaskStore: ObservableObject {
         self.context = context
         refresh()
     }
-
-    var activeTasks: [TodoTask] { tasks.filter { !$0.isCompleted && !$0.isArchived } }
-    var completedTasks: [TodoTask] { tasks.filter { $0.isCompleted && !$0.isArchived }.sorted { ($0.completedAt ?? .distantPast) > ($1.completedAt ?? .distantPast) } }
 
     func tasks(in bucket: TaskBucket) -> [TodoTask] {
         activeTasks
@@ -85,10 +84,16 @@ final class TaskStore: ObservableObject {
             tasks = []
             saveError = error.localizedDescription
         }
+        recomputeDerivedLists()
     }
 
     func clearError() {
         saveError = nil
+    }
+
+    private func recomputeDerivedLists() {
+        activeTasks = tasks.filter { !$0.isCompleted && !$0.isArchived }
+        completedTasks = tasks.filter { $0.isCompleted && !$0.isArchived }.sorted { ($0.completedAt ?? .distantPast) > ($1.completedAt ?? .distantPast) }
     }
 
     private func nextOrder(in bucket: TaskBucket) -> Double {
