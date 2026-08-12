@@ -2,7 +2,7 @@ import SwiftUI
 
 struct PixelFishView: View {
     static let collapseShakeDelay: TimeInterval = 0.5
-    static let bubbleCooldown: TimeInterval = 0
+    static let bubbleCooldown: TimeInterval = 15
     static let bubbleSequenceDuration: TimeInterval = 3
     let collapseAnimationID: UInt
     let shouldReduceMotion: Bool

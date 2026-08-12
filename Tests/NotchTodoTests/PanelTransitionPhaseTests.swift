@@ -20,8 +20,8 @@ final class PanelTransitionPhaseTests: XCTestCase {
         XCTAssertEqual(PixelFishView.collapseShakeDelay, 0.5, accuracy: 0.001)
     }
 
-    func testFishRepeatsBubbleSequencesWithoutCooldown() {
-        XCTAssertEqual(PixelFishView.bubbleCooldown, 0, accuracy: 0.001)
+    func testFishWaitsFifteenSecondsBetweenBubbleSequences() {
+        XCTAssertEqual(PixelFishView.bubbleCooldown, 15, accuracy: 0.001)
     }
 
     func testFishBubblesStayVisibleForThreeSeconds() {
