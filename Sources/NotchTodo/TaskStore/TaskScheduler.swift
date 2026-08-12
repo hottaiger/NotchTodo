@@ -19,8 +19,12 @@ final class TaskScheduler {
     }
 
     private func runPass() {
-        try? ArchiveService.archiveCompletedTasks(in: context)
-        try? ArchiveService.purgeExpiredArchives(in: context)
+        do {
+            try ArchiveService.archiveCompletedTasks(in: context)
+            try ArchiveService.purgeExpiredArchives(in: context)
+        } catch {
+            NSLog("NotchTodo scheduled archive failed: \(error.localizedDescription)")
+        }
         scheduleNextArchivePass()
     }
 }

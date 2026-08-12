@@ -5,6 +5,7 @@ import Combine
 @MainActor
 final class TaskStore: ObservableObject {
     @Published private(set) var tasks: [TodoTask] = []
+    @Published private(set) var saveError: String?
     let context: ModelContext
 
     init(context: ModelContext) {
@@ -78,7 +79,16 @@ final class TaskStore: ObservableObject {
 
     func refresh() {
         let descriptor = FetchDescriptor<TodoTask>(sortBy: [SortDescriptor(\.createdAt)])
-        tasks = (try? context.fetch(descriptor)) ?? []
+        do {
+            tasks = try context.fetch(descriptor)
+        } catch {
+            tasks = []
+            saveError = error.localizedDescription
+        }
+    }
+
+    func clearError() {
+        saveError = nil
     }
 
     private func nextOrder(in bucket: TaskBucket) -> Double {
@@ -86,7 +96,11 @@ final class TaskStore: ObservableObject {
     }
 
     private func saveAndRefresh() {
-        try? context.save()
+        do {
+            try context.save()
+        } catch {
+            saveError = error.localizedDescription
+        }
         refresh()
     }
 }

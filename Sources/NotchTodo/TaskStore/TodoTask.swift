@@ -78,4 +78,8 @@ final class TodoTask {
         guard let dueDate, !isCompleted else { return false }
         return dueDate >= .now && dueDate <= Calendar.current.date(byAdding: .hour, value: 24, to: .now)!
     }
+    var isOverdue: Bool {
+        guard let dueDate, !isCompleted else { return false }
+        return dueDate < .now
+    }
 }

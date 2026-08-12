@@ -26,8 +26,8 @@ struct TaskCardView: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(task.title).font(.system(size: 12, weight: .medium)).strikethrough(task.isCompleted).lineLimit(2)
                 if let dueDate = task.dueDate {
-                    Label(dueDate.formatted(.dateTime.month(.abbreviated).day()), systemImage: "calendar")
-                        .font(.system(size: 9)).foregroundStyle(task.isDueSoon ? .orange : .secondary)
+                    Label(task.isOverdue ? "逾期" : dueDate.formatted(.dateTime.month(.abbreviated).day()), systemImage: task.isOverdue ? "exclamationmark.circle.fill" : "calendar")
+                        .font(.system(size: 9)).foregroundStyle(task.isOverdue ? .red : (task.isDueSoon ? .orange : .secondary))
                 }
             }
             Spacer(minLength: 0)

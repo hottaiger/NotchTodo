@@ -4,13 +4,22 @@ struct SettingsView: View {
     @ObservedObject var settings: AppSettings
     let appDelegate: AppDelegate
     @State private var launchError: String?
+    @State private var shortcutError: String?
 
     var body: some View {
         Form {
             Section("行为") {
                 Toggle("显示未完成数量", isOn: $settings.showsTaskCount)
                 Picker("自动收起", selection: $settings.autoCollapseSeconds) { Text("关闭").tag(0.0); Text("5 秒").tag(5.0); Text("10 秒").tag(10.0); Text("30 秒").tag(30.0) }
-                Picker("全局快捷键", selection: Binding(get: { settings.shortcutChoice }, set: { settings.shortcutChoice = $0; appDelegate.configureShortcut($0) })) { ForEach(ShortcutChoice.allCases) { Text($0.title).tag($0) } }
+                Picker("全局快捷键", selection: Binding(get: { settings.shortcutChoice }, set: { newValue in
+                    if appDelegate.configureShortcut(newValue) {
+                        settings.shortcutChoice = newValue
+                        shortcutError = nil
+                    } else {
+                        shortcutError = "快捷键可能被其他应用占用，未生效"
+                    }
+                })) { ForEach(ShortcutChoice.allCases) { Text($0.title).tag($0) } }
+                if let shortcutError { Text(shortcutError).foregroundStyle(.red) }
             }
             Section("显示器") { Picker("外接显示器位置", selection: Binding(get: { settings.externalDisplayPlacement }, set: { settings.externalDisplayPlacement = $0; appDelegate.refreshPanelPlacement() })) { ForEach(ExternalDisplayPlacement.allCases) { Text($0.title).tag($0) } } }
             Section("启动") {

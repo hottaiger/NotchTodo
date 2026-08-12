@@ -24,16 +24,32 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let factory = ModelContainerFactory.make()
         recoveryMessage = factory.recoveryMessage
         store = TaskStore(context: factory.container.mainContext)
-        try? ArchiveService.archiveCompletedTasks(in: store.context)
-        try? ArchiveService.purgeExpiredArchives(in: store.context)
+        do {
+            try ArchiveService.archiveCompletedTasks(in: store.context)
+            try ArchiveService.purgeExpiredArchives(in: store.context)
+        } catch {
+            present(error)
+        }
         scheduler = TaskScheduler(context: store.context)
         scheduler?.start()
         panelController = NotchPanelController(store: store, settings: settings)
         shortcut = GlobalShortcutManager { [weak self] in self?.panelController.toggle() }
         configureShortcut(settings.shortcutChoice)
+        if let recoveryMessage {
+            DispatchQueue.main.async { [weak self] in self?.present(recoveryMessage, title: "数据已恢复") }
+        }
     }
 
-    func configureShortcut(_ choice: ShortcutChoice) { shortcut?.register(choice) }
+    @discardableResult
+    func configureShortcut(_ choice: ShortcutChoice) -> Bool {
+        guard let shortcut else { return false }
+        let ok = shortcut.register(choice)
+        if !ok {
+            // 新快捷键注册失败，回滚到当前已保存的选择
+            _ = shortcut.register(settings.shortcutChoice)
+        }
+        return ok
+    }
     func refreshPanelPlacement() { panelController.collapse() }
 
     private func installStatusItem() {
@@ -93,6 +109,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func present(_ error: Error) {
         let alert = NSAlert(error: error)
+        alert.runModal()
+    }
+
+    private func present(_ message: String, title: String) {
+        let alert = NSAlert()
+        alert.messageText = title
+        alert.informativeText = message
         alert.runModal()
     }
 }
