@@ -52,6 +52,15 @@ struct TaskCardView: View {
             Button("延期到明天") { store.deferToTomorrow(task) }
             Button("删除", role: .destructive) { store.delete(task) }
         }
+        .dropDestination(for: String.self) { identifiers, _ in
+            guard let raw = identifiers.first,
+                  let id = UUID(uuidString: raw),
+                  let dragged = store.tasks.first(where: { $0.id == id }),
+                  dragged.id != task.id else { return false }
+            store.move(dragged, to: task.bucket, before: task)
+            activity()
+            return true
+        }
         .accessibilityElement(children: .combine)
     }
 

@@ -128,4 +128,21 @@ final class TaskStoreTests: XCTestCase {
         XCTAssertEqual([t1.sortOrder, t2.sortOrder, t3.sortOrder], [0.0, 1.0, 2.0])
         XCTAssertEqual(store.tasks(in: .later).map(\.id), [t1.id, t2.id, t3.id])
     }
+
+    @MainActor func testMoveBeforeNeighborInsertsInOrder() throws {
+        let store = try makeStore()
+        let a = try XCTUnwrap(store.add(title: "A", bucket: .later))
+        let b = try XCTUnwrap(store.add(title: "B", bucket: .later))
+        let c = try XCTUnwrap(store.add(title: "C", bucket: .later))
+        store.move(c, to: .later, before: a)
+        XCTAssertEqual(store.tasks(in: .later).map(\.id), [c.id, a.id, b.id])
+    }
+
+    @MainActor func testMoveBeforeFirstGoesToTop() throws {
+        let store = try makeStore()
+        let a = try XCTUnwrap(store.add(title: "A", bucket: .later))
+        let b = try XCTUnwrap(store.add(title: "B", bucket: .later))
+        store.move(b, to: .later, before: a)
+        XCTAssertEqual(store.tasks(in: .later).map(\.id), [b.id, a.id])
+    }
 }

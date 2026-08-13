@@ -41,9 +41,11 @@ final class TaskStore: ObservableObject {
         saveAndRefresh()
     }
 
-    func move(_ task: TodoTask, to bucket: TaskBucket) {
+    /// Move `task` into `bucket`. Pass `neighbor` to insert immediately before that task
+    /// (mid-point of neighbouring sortOrders); omit it to append to the tail of the column.
+    func move(_ task: TodoTask, to bucket: TaskBucket, before neighbor: TodoTask? = nil) {
         task.bucket = bucket
-        task.sortOrder = nextOrder(in: bucket)
+        task.sortOrder = insertionSortOrder(in: bucket, for: task, before: neighbor)
         saveAndRefresh()
     }
 
@@ -98,6 +100,16 @@ final class TaskStore: ObservableObject {
 
     private func nextOrder(in bucket: TaskBucket) -> Double {
         (tasks(in: bucket).map(\.sortOrder).max() ?? -1) + 1
+    }
+
+    private func insertionSortOrder(in bucket: TaskBucket, for task: TodoTask, before neighbor: TodoTask?) -> Double {
+        let column = tasks(in: bucket).filter { $0.id != task.id }
+        guard let neighbor, let idx = column.firstIndex(where: { $0.id == neighbor.id }) else {
+            return (column.map(\.sortOrder).max() ?? -1) + 1
+        }
+        let neighborOrder = column[idx].sortOrder
+        if idx == 0 { return neighborOrder - 1 }
+        return (column[idx - 1].sortOrder + neighborOrder) / 2
     }
 
     private func saveAndRefresh() {
