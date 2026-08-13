@@ -4,29 +4,68 @@ struct PixelFishView: View {
     static let collapseShakeDelay: TimeInterval = 0.5
     let collapseAnimationID: UInt
     let shouldReduceMotion: Bool
-    @State private var horizontalOffset: CGFloat = 0
+    @State private var shakeOffset: CGFloat = 0
+    @State private var swimBob: CGFloat = 0
     @State private var shakeWorkItems: [DispatchWorkItem] = []
 
-    var body: some View {
-        Canvas { context, _ in
-            for pixel in Self.pixels {
-                context.fill(
-                    Path(CGRect(x: pixel.x, y: pixel.y, width: 4, height: 4)),
-                    with: .color(pixel.color)
-                )
+    /// 尾巴逐帧摆动的相位（像素艺术风格，不做插值）。
+    private enum SwimPhase: CaseIterable {
+        case tailUp, center, tailDown
+        var tailDelta: CGFloat {
+            switch self {
+            case .tailUp: -1
+            case .center: 0
+            case .tailDown: 1
             }
         }
-        .frame(width: 28, height: 16)
-        .offset(x: horizontalOffset)
-        .accessibilityHidden(true)
-        .onChange(of: collapseAnimationID) { _, _ in
-            shakeIfAllowed()
+    }
+
+    var body: some View {
+        fishLayer
+            .frame(width: 28, height: 16)
+            .offset(y: swimBob)
+            .offset(x: shakeOffset)
+            .accessibilityHidden(true)
+            .onAppear {
+                startSwim()
+                if collapseAnimationID > 0 { shakeIfAllowed() }
+            }
+            .onChange(of: collapseAnimationID) { _, _ in
+                shakeIfAllowed()
+            }
+            .onDisappear {
+                cancelShake()
+            }
+    }
+
+    @ViewBuilder
+    private var fishLayer: some View {
+        if shouldReduceMotion {
+            fishCanvas(tail: .center)
+        } else {
+            PhaseAnimator([SwimPhase.tailUp, .center, .tailDown, .center]) { phase in
+                fishCanvas(tail: phase)
+            } animation: { _ in
+                .linear(duration: 0.28)
+            }
         }
-        .onAppear {
-            if collapseAnimationID > 0 { shakeIfAllowed() }
+    }
+
+    private func fishCanvas(tail phase: SwimPhase) -> some View {
+        Canvas { context, _ in
+            for pixel in Self.pixels {
+                // 尾部像素（x >= 20）按相位上下摆动，身体保持不动。
+                let y = pixel.y + (pixel.x >= 20 ? phase.tailDelta * 2 : 0)
+                context.fill(Path(CGRect(x: pixel.x, y: y, width: 4, height: 4)), with: .color(pixel.color))
+            }
         }
-        .onDisappear {
-            cancelShake()
+    }
+
+    /// 整体上下游漂（连续动画），让小鱼看起来在水中游动。
+    private func startSwim() {
+        guard !shouldReduceMotion else { return }
+        withAnimation(.easeInOut(duration: 1.1).repeatForever(autoreverses: true)) {
+            swimBob = -2
         }
     }
 
@@ -43,7 +82,7 @@ struct PixelFishView: View {
     private func scheduleShake(offset: CGFloat, after delay: TimeInterval, duration: TimeInterval) {
         let workItem = DispatchWorkItem {
             withAnimation(.linear(duration: duration)) {
-                horizontalOffset = offset
+                shakeOffset = offset
             }
         }
         shakeWorkItems.append(workItem)
@@ -53,7 +92,7 @@ struct PixelFishView: View {
     private func cancelShake() {
         shakeWorkItems.forEach { $0.cancel() }
         shakeWorkItems.removeAll()
-        horizontalOffset = 0
+        shakeOffset = 0
     }
 
     private static let pixels: [(x: CGFloat, y: CGFloat, color: Color)] = [
