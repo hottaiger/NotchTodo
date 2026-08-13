@@ -28,8 +28,7 @@ struct AppleView: View {
         (2, 16, red), (4, 16, red), (6, 16, hi), (8, 16, red), (10, 16, red), (12, 16, red), (14, 16, red), (16, 16, red), (18, 16, red), (20, 16, red),
         (2, 18, red), (4, 18, red), (6, 18, red), (8, 18, red), (10, 18, red), (12, 18, red), (14, 18, red), (16, 18, red), (18, 18, red), (20, 18, red),
         (2, 20, red), (4, 20, red), (6, 20, red), (8, 20, red), (10, 20, red), (12, 20, red), (14, 20, red), (16, 20, red), (18, 20, red), (20, 20, red),
-        (4, 22, red), (6, 22, red), (8, 22, red), (10, 22, red), (12, 22, red), (14, 22, red), (16, 22, red), (18, 22, red),
-        (6, 24, red), (8, 24, red), (10, 24, red), (12, 24, red), (14, 24, red), (16, 24, red)
+        (4, 20, red), (6, 20, red), (8, 20, red), (10, 20, red), (12, 20, red), (14, 20, red), (16, 20, red), (18, 20, red)
     ]
 
     var body: some View {
@@ -38,7 +37,7 @@ struct AppleView: View {
                 context.fill(Path(CGRect(x: p.0, y: p.1, width: 2, height: 2)), with: .color(p.2))
             }
         }
-        .frame(width: 28, height: 28)
+        .frame(width: 28, height: 22)
         .offset(y: swimBob)
         .offset(x: shakeOffset)
         .accessibilityHidden(true)
