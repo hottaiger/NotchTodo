@@ -59,6 +59,7 @@ struct PixelFishView: View {
                 context.fill(Path(CGRect(x: pixel.x, y: y, width: 2, height: 2)), with: .color(pixel.color))
             }
         }
+        .frame(width: 28, height: 16)
     }
 
     /// 整体上下游漂（连续动画），让小鱼看起来在水中游动。
