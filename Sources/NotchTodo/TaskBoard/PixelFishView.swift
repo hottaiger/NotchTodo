@@ -71,7 +71,7 @@ struct PixelFishView: View {
         shakeOffset = 0
     }
 
-    // 像素鱼（朝右，尾在左）：V 形尾鳍 + 背鳍/腹鳍 + 流线身体（背亮→腹深）+ 眼睛 + 嘴。
+    // 像素鱼（朝右，尾在左）：V 形分叉尾鳍 + 背鳍/腹鳍 + 流线身体（背亮→腹深）+ 眼睛 + 嘴。
     private static let bodyLight = Color(red: 0.60, green: 1.00, blue: 0.93)
     private static let bodyMid = Color(red: 0.33, green: 0.85, blue: 0.82)
     private static let bodyDark = Color(red: 0.19, green: 0.50, blue: 0.58)
@@ -80,28 +80,23 @@ struct PixelFishView: View {
 
     private static let pixels: [(x: CGFloat, y: CGFloat, color: Color)] = [
         // 背鳍
-        (12, 0, bodyLight), (14, 0, bodyLight),
-        // 身体上（亮）
-        (6, 2, bodyLight), (8, 2, bodyLight), (10, 2, bodyLight), (12, 2, bodyLight),
-        (14, 2, bodyLight), (16, 2, bodyLight), (18, 2, bodyLight), (20, 2, bodyLight),
-        // 尾鳍上 + 身体中 + 眼睛 + 身体中
-        (2, 4, bodyTail), (4, 4, bodyTail),
-        (6, 4, bodyLight), (8, 4, bodyLight), (10, 4, bodyLight), (12, 4, bodyLight),
-        (14, 4, eye),
-        (16, 4, bodyMid), (18, 4, bodyMid), (20, 4, bodyMid), (22, 4, bodyMid),
-        // 尾尖 + 尾鳍中 + 身体中 + 嘴
-        (0, 6, bodyTail), (2, 6, bodyTail), (4, 6, bodyTail),
-        (6, 6, bodyMid), (8, 6, bodyMid), (10, 6, bodyMid), (12, 6, bodyMid),
-        (14, 6, bodyMid), (16, 6, bodyMid), (18, 6, bodyMid), (20, 6, bodyMid), (22, 6, bodyMid),
-        (24, 6, bodyMid),
-        // 尾鳍下 + 身体下（深）
-        (2, 8, bodyTail), (4, 8, bodyTail),
-        (6, 8, bodyDark), (8, 8, bodyDark), (10, 8, bodyDark), (12, 8, bodyDark),
-        (14, 8, bodyDark), (16, 8, bodyDark), (18, 8, bodyDark), (20, 8, bodyDark), (22, 8, bodyDark),
-        // 身体下（深）
-        (6, 10, bodyDark), (8, 10, bodyDark), (10, 10, bodyDark), (12, 10, bodyDark),
-        (14, 10, bodyDark), (16, 10, bodyDark), (18, 10, bodyDark), (20, 10, bodyDark),
+        (12, 0, bodyLight), (14, 0, bodyLight), (16, 0, bodyLight),
+        // 尾上尖 + 身体上（亮）
+        (0, 2, bodyTail),
+        (6, 2, bodyLight), (8, 2, bodyLight), (10, 2, bodyLight), (12, 2, bodyLight), (14, 2, bodyLight), (16, 2, bodyLight), (18, 2, bodyLight), (20, 2, bodyLight), (22, 2, bodyLight),
+        // 尾上叶 + 身体背（亮）
+        (0, 4, bodyTail), (2, 4, bodyTail),
+        (6, 4, bodyLight), (8, 4, bodyLight), (10, 4, bodyLight), (12, 4, bodyLight), (14, 4, bodyLight), (16, 4, bodyLight), (18, 4, bodyLight), (20, 4, bodyLight), (22, 4, bodyLight), (24, 4, bodyLight),
+        // 尾根（连身）+ 身体中 + 眼睛 + 嘴
+        (4, 6, bodyTail),
+        (6, 6, bodyMid), (8, 6, bodyMid), (10, 6, bodyMid), (12, 6, bodyMid), (14, 6, eye), (16, 6, bodyMid), (18, 6, bodyMid), (20, 6, bodyMid), (22, 6, bodyMid), (24, 6, bodyMid), (26, 6, bodyMid),
+        // 尾下叶 + 身体腹（深）
+        (0, 8, bodyTail), (2, 8, bodyTail),
+        (6, 8, bodyDark), (8, 8, bodyDark), (10, 8, bodyDark), (12, 8, bodyDark), (14, 8, bodyDark), (16, 8, bodyDark), (18, 8, bodyDark), (20, 8, bodyDark), (22, 8, bodyDark), (24, 8, bodyDark),
+        // 尾下尖 + 身体下（深）
+        (0, 10, bodyTail),
+        (6, 10, bodyDark), (8, 10, bodyDark), (10, 10, bodyDark), (12, 10, bodyDark), (14, 10, bodyDark), (16, 10, bodyDark), (18, 10, bodyDark), (20, 10, bodyDark), (22, 10, bodyDark),
         // 腹鳍
-        (12, 12, bodyMid), (14, 12, bodyMid)
+        (12, 12, bodyMid), (14, 12, bodyMid), (16, 12, bodyMid)
     ]
 }
