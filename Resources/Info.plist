@@ -3,6 +3,7 @@
 <plist version="1.0"><dict>
   <key>CFBundleDevelopmentRegion</key><string>zh-Hans</string>
   <key>CFBundleExecutable</key><string>NotchTodo</string>
+  <key>CFBundleIconFile</key><string>AppIcon</string>
   <key>CFBundleIdentifier</key><string>com.notchtodo.app</string>
   <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
   <key>CFBundleName</key><string>NotchTodo</string>

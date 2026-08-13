@@ -20,6 +20,12 @@ if [[ -n "$VERSION" ]]; then
 fi
 /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD" "$APP_PATH/Contents/Info.plist"
 
+# 拷贝图标（如果存在）
+if [[ -f "Resources/AppIcon.icns" ]]; then
+    mkdir -p "$APP_PATH/Contents/Resources"
+    cp "Resources/AppIcon.icns" "$APP_PATH/Contents/Resources/AppIcon.icns"
+fi
+
 # ad-hoc 签名（无 Developer ID 时的兜底，缓解 Gatekeeper 误报）
 codesign --force --sign - "$APP_PATH"
 
