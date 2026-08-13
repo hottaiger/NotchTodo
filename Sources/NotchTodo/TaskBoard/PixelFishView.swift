@@ -54,8 +54,8 @@ struct PixelFishView: View {
     private func fishCanvas(tail phase: SwimPhase) -> some View {
         Canvas { context, _ in
             for pixel in Self.pixels {
-                // 尾部像素（x >= 20）按相位上下摆动，身体保持不动。
-                let y = pixel.y + (pixel.x >= 20 ? phase.tailDelta * 2 : 0)
+                // 尾鳍像素（x <= 4，鱼尾在左）按相位上下摆动，身体和头部保持不动。
+                let y = pixel.y + (pixel.x <= 4 ? phase.tailDelta * 2 : 0)
                 context.fill(Path(CGRect(x: pixel.x, y: y, width: 4, height: 4)), with: .color(pixel.color))
             }
         }
