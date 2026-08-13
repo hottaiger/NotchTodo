@@ -26,10 +26,10 @@ struct NotchSurfaceView: View {
     static func shouldUseFishBackground(isExpanded: Bool) -> Bool { !isExpanded }
 
     private var fishLeadingInset: CGFloat {
-        isNotchAttached ? 18 : 2
+        isNotchAttached ? 22 : 2
     }
 
-    private var fishBackgroundWidth: CGFloat { isNotchAttached ? 48 : 32 }
+    private var fishBackgroundWidth: CGFloat { isNotchAttached ? 52 : 32 }
 
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -48,7 +48,8 @@ struct NotchSurfaceView: View {
             }
             if Self.shouldUseFishBackground(isExpanded: controller.isExpanded) {
                 Color.black
-                    .frame(width: fishBackgroundWidth, height: 38)
+                    .frame(width: fishBackgroundWidth)
+                    .frame(maxHeight: .infinity)
                     .allowsHitTesting(false)
             }
             if Self.shouldShowFish(isExpanded: controller.isExpanded) {
