@@ -6,67 +6,42 @@ struct PixelFishView: View {
     let shouldReduceMotion: Bool
     @State private var shakeOffset: CGFloat = 0
     @State private var swimBob: CGFloat = 0
+    @State private var tailWag = false
     @State private var shakeWorkItems: [DispatchWorkItem] = []
 
-    /// 尾鳍逐帧摆动的相位（像素艺术风格，不做插值）。
-    private enum SwimPhase: CaseIterable {
-        case tailUp, center, tailDown
-        var tailDelta: CGFloat {
-            switch self {
-            case .tailUp: -1
-            case .center: 0
-            case .tailDown: 1
-            }
-        }
-    }
-
     var body: some View {
-        fishLayer
-            .frame(width: 28, height: 16)
-            .offset(y: swimBob)
-            .offset(x: shakeOffset)
-            .accessibilityHidden(true)
-            .onAppear {
-                startSwim()
-                if collapseAnimationID > 0 { shakeIfAllowed() }
-            }
-            .onChange(of: collapseAnimationID) { _, _ in
-                shakeIfAllowed()
-            }
-            .onDisappear {
-                cancelShake()
-            }
-    }
-
-    @ViewBuilder
-    private var fishLayer: some View {
-        if shouldReduceMotion {
-            fishCanvas(tail: .center)
-        } else {
-            PhaseAnimator([SwimPhase.tailUp, .center, .tailDown, .center]) { phase in
-                fishCanvas(tail: phase)
-            } animation: { _ in
-                .linear(duration: 0.28)
-            }
-        }
-    }
-
-    private func fishCanvas(tail phase: SwimPhase) -> some View {
         Canvas { context, _ in
+            // 尾鳍（x <= 4，鱼尾在左）按 tailWag 上下摆动；reduce motion 时归位。
+            let tailDelta: CGFloat = shouldReduceMotion ? 0 : (tailWag ? -2 : 2)
             for pixel in Self.pixels {
-                // 尾鳍（x <= 4，鱼尾在左）按相位上下摆动，身体和头部保持不动。
-                let y = pixel.y + (pixel.x <= 4 ? phase.tailDelta * 2 : 0)
+                let y = pixel.y + (pixel.x <= 4 ? tailDelta : 0)
                 context.fill(Path(CGRect(x: pixel.x, y: y, width: 2, height: 2)), with: .color(pixel.color))
             }
         }
         .frame(width: 28, height: 16)
+        .offset(y: swimBob)
+        .offset(x: shakeOffset)
+        .accessibilityHidden(true)
+        .onAppear {
+            startAnimations()
+            if collapseAnimationID > 0 { shakeIfAllowed() }
+        }
+        .onChange(of: collapseAnimationID) { _, _ in
+            shakeIfAllowed()
+        }
+        .onDisappear {
+            cancelShake()
+        }
     }
 
-    /// 整体上下游漂（连续动画），让小鱼看起来在水中游动。
-    private func startSwim() {
+    /// 整体上下游漂 + 尾鳍逐帧摆动（两态往返）。
+    private func startAnimations() {
         guard !shouldReduceMotion else { return }
         withAnimation(.easeInOut(duration: 1.1).repeatForever(autoreverses: true)) {
             swimBob = -2
+        }
+        withAnimation(.easeInOut(duration: 0.28).repeatForever(autoreverses: true)) {
+            tailWag = true
         }
     }
 
