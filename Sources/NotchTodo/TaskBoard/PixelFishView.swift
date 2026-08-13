@@ -75,6 +75,7 @@ struct PixelFishView: View {
     private static let bodyLight = Color(red: 0.60, green: 1.00, blue: 0.93)
     private static let bodyMid = Color(red: 0.33, green: 0.85, blue: 0.82)
     private static let bodyDark = Color(red: 0.19, green: 0.50, blue: 0.58)
+    private static let bodyTail = Color.white
     private static let eye = Color(red: 0.06, green: 0.15, blue: 0.16)
 
     private static let pixels: [(x: CGFloat, y: CGFloat, color: Color)] = [
@@ -84,17 +85,17 @@ struct PixelFishView: View {
         (6, 2, bodyLight), (8, 2, bodyLight), (10, 2, bodyLight), (12, 2, bodyLight),
         (14, 2, bodyLight), (16, 2, bodyLight), (18, 2, bodyLight), (20, 2, bodyLight),
         // 尾鳍上 + 身体中 + 眼睛 + 身体中
-        (2, 4, bodyMid), (4, 4, bodyMid),
+        (2, 4, bodyTail), (4, 4, bodyTail),
         (6, 4, bodyLight), (8, 4, bodyLight), (10, 4, bodyLight), (12, 4, bodyLight),
         (14, 4, eye),
         (16, 4, bodyMid), (18, 4, bodyMid), (20, 4, bodyMid), (22, 4, bodyMid),
         // 尾尖 + 尾鳍中 + 身体中 + 嘴
-        (0, 6, bodyMid), (2, 6, bodyMid), (4, 6, bodyMid),
+        (0, 6, bodyTail), (2, 6, bodyTail), (4, 6, bodyTail),
         (6, 6, bodyMid), (8, 6, bodyMid), (10, 6, bodyMid), (12, 6, bodyMid),
         (14, 6, bodyMid), (16, 6, bodyMid), (18, 6, bodyMid), (20, 6, bodyMid), (22, 6, bodyMid),
         (24, 6, bodyMid),
         // 尾鳍下 + 身体下（深）
-        (2, 8, bodyMid), (4, 8, bodyMid),
+        (2, 8, bodyTail), (4, 8, bodyTail),
         (6, 8, bodyDark), (8, 8, bodyDark), (10, 8, bodyDark), (12, 8, bodyDark),
         (14, 8, bodyDark), (16, 8, bodyDark), (18, 8, bodyDark), (20, 8, bodyDark), (22, 8, bodyDark),
         // 身体下（深）
