@@ -41,10 +41,15 @@ struct TaskBoardView: View {
                 }
             }
             if !store.completedTasks.isEmpty {
-                DisclosureGroup("已完成 \(store.completedTasks.count) 项", isExpanded: $isCompletedExpanded) {
-                    ForEach(store.completedTasks, id: \.id) { task in
-                        TaskCardView(task: task, store: store, editorTask: editorBinding, activity: controller.registerActivity)
+                HStack {
+                    DisclosureGroup("已完成 \(store.completedTasks.count) 项", isExpanded: $isCompletedExpanded) {
+                        ForEach(store.completedTasks, id: \.id) { task in
+                            TaskCardView(task: task, store: store, editorTask: editorBinding, activity: controller.registerActivity)
+                        }
                     }
+                    Spacer(minLength: 4)
+                    Button("清空") { clearCompleted() }
+                        .buttonStyle(.plain).font(.system(size: 11)).foregroundStyle(.red)
                 }
                 .font(.system(size: 11))
             }
@@ -87,6 +92,11 @@ struct TaskBoardView: View {
         } message: {
             Text(store.saveError ?? "")
         }
+    }
+
+    private func clearCompleted() {
+        let snapshot = store.completedTasks
+        for task in snapshot { store.delete(task) }
     }
 
     /// Maps the unified `activeSheet` state onto the `editorTask: Binding<TodoTask?>`

@@ -97,6 +97,11 @@ private struct CapsuleSummaryView: View {
             topTrailingRadius: isNotchAttached ? 0 : 10,
             isNotchAttached: isNotchAttached
         ))
+        .overlay(alignment: .topTrailing) {
+            if let task = headlineTask, task.isOverdue || task.isDueSoon {
+                Circle().fill(task.isOverdue ? Color.red : Color.orange).frame(width: 6, height: 6).padding(5)
+            }
+        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("NotchTodo，\(store.activeTasks.count) 项未完成任务")
         .accessibilityHint("点击展开待办看板")
