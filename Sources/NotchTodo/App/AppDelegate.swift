@@ -35,6 +35,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         panelController = NotchPanelController(store: store, settings: settings)
         shortcut = GlobalShortcutManager { [weak self] in self?.panelController.toggle() }
         configureShortcut(settings.shortcutChoice)
+        if settings.launchAtLogin {
+            do {
+                try LaunchAtLoginService.setEnabled(true)
+            } catch {
+                settings.launchAtLogin = LaunchAtLoginService.isEnabled
+            }
+        }
         if let recoveryMessage {
             DispatchQueue.main.async { [weak self] in self?.present(recoveryMessage, title: "数据已恢复") }
         }

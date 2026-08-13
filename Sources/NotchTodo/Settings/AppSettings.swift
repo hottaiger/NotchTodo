@@ -50,7 +50,7 @@ final class AppSettings: ObservableObject {
         autoCollapseSeconds = d.object(forKey: Keys.autoCollapseSeconds) as? Double ?? AppSettings.defaultAutoCollapseSeconds
         showsTaskCount = d.object(forKey: Keys.showsTaskCount) as? Bool ?? true
         externalDisplayPlacementRaw = d.string(forKey: Keys.externalDisplayPlacement) ?? ExternalDisplayPlacement.center.rawValue
-        launchAtLogin = d.bool(forKey: Keys.launchAtLogin)
+        launchAtLogin = (d.object(forKey: Keys.launchAtLogin) as? Bool) ?? true
         shortcutChoiceRaw = d.string(forKey: Keys.shortcutChoice) ?? ShortcutChoice.defaultChoice.rawValue
     }
 

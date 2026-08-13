@@ -71,13 +71,14 @@ private struct CapsuleSummaryView: View {
     let usesTrailingSummaryLayout: Bool
     let isNotchAttached: Bool
 
-    private var highestPriority: TaskPriority? { store.activeTasks.map(\.priority).max { $0.rawValue < $1.rawValue } }
+    private var headlineTask: TodoTask? { store.tasks(in: .now).first ?? store.tasks(in: .later).first }
+    private var highestPriority: TaskPriority? { headlineTask?.priority }
 
     var body: some View {
         let summary = HStack(spacing: 8) {
             Circle().fill(color(for: highestPriority)).frame(width: 7, height: 7)
             if showsCount {
-                Text(CapsuleSummaryText.title(from: store.activeTasks.map(\.title)))
+                Text(CapsuleSummaryText.title(from: [headlineTask?.title].compactMap { $0 }))
                     .font(.system(size: 12, weight: .semibold))
             } else {
                 Text("\(store.activeTasks.count) 项待办").font(.system(size: 12, weight: .semibold))
