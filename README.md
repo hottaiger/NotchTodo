@@ -1,6 +1,6 @@
 # NotchTodo
 
-macOS 14+ 原生刘海待办工具。收起时显示在刘海右侧，点击或按 `Option + Space` 展开双列任务看板。
+macOS 14+ 原生刘海待办工具。收起时显示在刘海右侧，点击或按 `Option + Enter` 展开双列任务看板。
 
 ## 功能
 
@@ -17,12 +17,19 @@ macOS 14+ 原生刘海待办工具。收起时显示在刘海右侧，点击或�
 
 ## 开发
 
+开发调试（先杀掉旧进程避免冲突，再以 debug 模式运行，终端可直接看日志输出）：
+
 ```bash
-swift test
-swift run
+pkill -x NotchTodo; swift run
 ```
 
-构建应用包：
+运行测试：
+
+```bash
+swift test
+```
+
+构建发布包（release 构建，打包 `.app`，ad-hoc 签名，产出分发 zip）：
 
 ```bash
 zsh scripts/build-app.sh
