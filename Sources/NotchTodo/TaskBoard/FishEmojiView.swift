@@ -7,7 +7,7 @@ struct FishEmojiView: View {
     var body: some View {
         Text("🐟")
             .font(.system(size: 16))
-            .offset(y: bob)
+            .offset(y: bob + 3)
             .accessibilityHidden(true)
             .onAppear {
                 guard !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion else { return }
