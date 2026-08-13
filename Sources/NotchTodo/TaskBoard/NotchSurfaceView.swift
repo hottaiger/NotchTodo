@@ -36,15 +36,18 @@ struct NotchSurfaceView: View {
             if controller.isExpanded {
                 TaskBoardView(store: store, controller: controller)
             } else {
-                CapsuleSummaryView(store: store, showsCount: settings.showsTaskCount, usesTrailingSummaryLayout: usesTrailingSummaryLayout, isNotchAttached: isNotchAttached)
-                    .frame(width: 104)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
-                    .onTapGesture { controller.expand() }
-                    .contextMenu {
-                        Button(L10n.t("capsule.openBoard")) { controller.expand() }
-                        Divider()
-                        Button(L10n.t("capsule.quit"), role: .destructive) { NSApp.terminate(nil) }
-                    }
+                HStack(spacing: 0) {
+                    Spacer()
+                    CapsuleSummaryView(store: store, showsCount: settings.showsTaskCount, usesTrailingSummaryLayout: usesTrailingSummaryLayout, isNotchAttached: isNotchAttached)
+                        .frame(width: 104)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onTapGesture { controller.expand() }
+                .contextMenu {
+                    Button(L10n.t("capsule.openBoard")) { controller.expand() }
+                    Divider()
+                    Button(L10n.t("capsule.quit"), role: .destructive) { NSApp.terminate(nil) }
+                }
             }
             if Self.shouldUseFishBackground(isExpanded: controller.isExpanded) {
                 Color.black
