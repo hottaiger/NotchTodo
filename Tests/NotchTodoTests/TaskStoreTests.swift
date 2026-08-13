@@ -145,4 +145,28 @@ final class TaskStoreTests: XCTestCase {
         store.move(b, to: .later, before: a)
         XCTAssertEqual(store.tasks(in: .later).map(\.id), [b.id, a.id])
     }
+
+    @MainActor func testArchivedTasksExcludedFromActiveAndCompleted() throws {
+        let store = try makeStore()
+        let task = try XCTUnwrap(store.add(title: "完成并归档"))
+        store.complete(task)
+        task.archivedAt = .now
+        store.refresh()
+        XCTAssertTrue(store.activeTasks.isEmpty)
+        XCTAssertTrue(store.completedTasks.isEmpty)
+        XCTAssertEqual(store.archivedTasks.count, 1)
+    }
+
+    @MainActor func testUnarchiveReturnsToCompleted() throws {
+        let store = try makeStore()
+        let task = try XCTUnwrap(store.add(title: "归档"))
+        store.complete(task)
+        task.archivedAt = .now
+        store.refresh()
+        store.unarchive(task)
+        XCTAssertNil(task.archivedAt)
+        XCTAssertTrue(task.isCompleted)
+        XCTAssertTrue(store.archivedTasks.isEmpty)
+        XCTAssertEqual(store.completedTasks.count, 1)
+    }
 }

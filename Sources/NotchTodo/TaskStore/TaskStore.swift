@@ -7,6 +7,7 @@ final class TaskStore: ObservableObject {
     @Published private(set) var tasks: [TodoTask] = []
     @Published private(set) var activeTasks: [TodoTask] = []
     @Published private(set) var completedTasks: [TodoTask] = []
+    @Published private(set) var archivedTasks: [TodoTask] = []
     @Published private(set) var saveError: String?
     let context: ModelContext
 
@@ -78,6 +79,13 @@ final class TaskStore: ObservableObject {
         saveAndRefresh()
     }
 
+    /// Restore an archived task: clears `archivedAt` but keeps `completedAt`, so the task
+    /// reappears in the "已完成" section. Use `reopen(_:)` afterwards to make it active again.
+    func unarchive(_ task: TodoTask) {
+        task.archivedAt = nil
+        saveAndRefresh()
+    }
+
     func refresh() {
         let descriptor = FetchDescriptor<TodoTask>(sortBy: [SortDescriptor(\.createdAt)])
         do {
@@ -96,6 +104,7 @@ final class TaskStore: ObservableObject {
     private func recomputeDerivedLists() {
         activeTasks = tasks.filter { !$0.isCompleted && !$0.isArchived }
         completedTasks = tasks.filter { $0.isCompleted && !$0.isArchived }.sorted { ($0.completedAt ?? .distantPast) > ($1.completedAt ?? .distantPast) }
+        archivedTasks = tasks.filter { $0.isArchived }.sorted { ($0.archivedAt ?? .distantPast) > ($1.archivedAt ?? .distantPast) }
     }
 
     private func nextOrder(in bucket: TaskBucket) -> Double {

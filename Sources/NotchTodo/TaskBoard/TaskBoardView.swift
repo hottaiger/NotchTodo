@@ -4,6 +4,7 @@ struct TaskBoardView: View {
     @ObservedObject var store: TaskStore
     @ObservedObject var controller: NotchPanelController
     @State private var isCompletedExpanded = false
+    @State private var isArchivedExpanded = false
     @State private var activeSheet: ActiveSheet?
     @FocusState private var quickAddFocused: Bool
     @AppStorage("onboardingCompleted") private var onboardingCompleted = false
@@ -43,6 +44,19 @@ struct TaskBoardView: View {
                 DisclosureGroup("已完成 \(store.completedTasks.count) 项", isExpanded: $isCompletedExpanded) {
                     ForEach(store.completedTasks, id: \.id) { task in
                         TaskCardView(task: task, store: store, editorTask: editorBinding, activity: controller.registerActivity)
+                    }
+                }
+                .font(.system(size: 11))
+            }
+            if !store.archivedTasks.isEmpty {
+                DisclosureGroup("最近归档 \(store.archivedTasks.count) 项", isExpanded: $isArchivedExpanded) {
+                    ForEach(store.archivedTasks, id: \.id) { task in
+                        HStack {
+                            Text(task.title).font(.system(size: 12)).strikethrough().foregroundStyle(.secondary).lineLimit(1)
+                            Spacer()
+                            Button("恢复") { store.unarchive(task); controller.registerActivity() }
+                                .buttonStyle(.plain).font(.system(size: 11)).foregroundStyle(.blue)
+                        }
                     }
                 }
                 .font(.system(size: 11))
