@@ -15,14 +15,51 @@ struct TaskCardView: View {
     let activity: () -> Void
 
     var body: some View {
+        cardContent
+            .padding(7)
+            .background(.background.opacity(0.55), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+            .contentShape(Rectangle())
+            .onTapGesture { editorTask = task; activity() }
+            .focusable()
+            .onKeyPress(.return, phases: .down) { context in
+                guard context.modifiers.contains(.command) else { return .ignored }
+                MainActor.assumeIsolated { toggleCompletion() }
+                return .handled
+            }
+            .onKeyPress(.delete, phases: .down) { _ in
+                MainActor.assumeIsolated { store.delete(task); activity() }
+                return .handled
+            }
+            .contextMenu {
+                Menu("优先级") { ForEach(TaskPriority.allCases) { priority in Button(priority.title) { store.setPriority(task, priority: priority) } } }
+                Button("延期到明天") { store.deferToTomorrow(task) }
+                Button("删除", role: .destructive) { store.delete(task) }
+            }
+            .dropDestination(for: String.self) { identifiers, _ in
+                guard let raw = identifiers.first,
+                      let id = UUID(uuidString: raw),
+                      let dragged = store.tasks.first(where: { $0.id == id }),
+                      dragged.id != task.id else { return false }
+                store.move(dragged, to: task.bucket, before: task)
+                activity()
+                return true
+            }
+            .accessibilityElement(children: .combine)
+    }
+
+    /// Card row content extracted so the body's modifier chain stays type-checkable.
+    @MainActor
+    @ViewBuilder
+    private var cardContent: some View {
         HStack(alignment: .top, spacing: 6) {
             Button {
-                task.isCompleted ? store.reopen(task) : store.complete(task)
-                activity()
+                toggleCompletion()
             } label: {
                 Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
                     .foregroundStyle(task.isCompleted ? .green : priorityColor)
-            }.buttonStyle(.plain).accessibilityLabel(task.isCompleted ? "恢复 \(task.title)" : "完成 \(task.title)")
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(task.isCompleted ? "恢复 \(task.title)" : "完成 \(task.title)")
             VStack(alignment: .leading, spacing: 3) {
                 Text(task.title).font(.system(size: 12, weight: .medium)).strikethrough(task.isCompleted).lineLimit(2)
                 if let dueDate = task.dueDate {
@@ -43,25 +80,12 @@ struct TaskCardView: View {
             .help("复制标题")
             .accessibilityLabel("复制待办标题：(task.title)")
         }
-        .padding(7)
-        .background(.background.opacity(0.55), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
-        .contentShape(Rectangle())
-        .onTapGesture { editorTask = task; activity() }
-        .contextMenu {
-            Menu("优先级") { ForEach(TaskPriority.allCases) { priority in Button(priority.title) { store.setPriority(task, priority: priority) } } }
-            Button("延期到明天") { store.deferToTomorrow(task) }
-            Button("删除", role: .destructive) { store.delete(task) }
-        }
-        .dropDestination(for: String.self) { identifiers, _ in
-            guard let raw = identifiers.first,
-                  let id = UUID(uuidString: raw),
-                  let dragged = store.tasks.first(where: { $0.id == id }),
-                  dragged.id != task.id else { return false }
-            store.move(dragged, to: task.bucket, before: task)
-            activity()
-            return true
-        }
-        .accessibilityElement(children: .combine)
+    }
+
+    @MainActor
+    private func toggleCompletion() {
+        task.isCompleted ? store.reopen(task) : store.complete(task)
+        activity()
     }
 
     private var priorityColor: Color { switch task.priority { case .high: .red; case .medium: .blue; case .low: .gray } }
