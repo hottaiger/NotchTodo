@@ -91,12 +91,6 @@
 "placement.leading" = "顶部左侧";
 "placement.trailing" = "顶部右侧";
 
-/* Decoration */
-"decoration.title" = "装饰";
-"decoration.kind" = "装饰类型";
-"decoration.fish" = "鱼";
-"decoration.apple" = "苹果";
-
 /* Errors */
 "error.unsupportedVersion" = "不支持的备份版本";
 "error.emptyTitle" = "任务标题不能为空";

@@ -56,25 +56,11 @@ struct NotchSurfaceView: View {
                     .allowsHitTesting(false)
             }
         if Self.shouldShowFish(isExpanded: controller.isExpanded) {
-            Group {
-                switch settings.decoration {
-                case .fish:
-                    PixelFishView(
-                        collapseAnimationID: controller.collapseAnimationID,
-                        shouldReduceMotion: NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
-                    )
-                    .padding(.top, 10)
-                case .apple:
-                    AppleView(
-                        collapseAnimationID: controller.collapseAnimationID,
-                        shouldReduceMotion: NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
-                    )
-                    .frame(maxHeight: .infinity)
-                    .scaleEffect(0.75)
-                }
-            }
-            .padding(.leading, fishLeadingInset)
-            .allowsHitTesting(false)
+            Text("🐟")
+                .font(.system(size: 16))
+                .frame(maxHeight: .infinity)
+                .padding(.leading, fishLeadingInset)
+                .allowsHitTesting(false)
         }
         }
         .animation(.spring(response: 0.22, dampingFraction: 0.86), value: controller.isExpanded)

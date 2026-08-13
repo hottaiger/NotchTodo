@@ -21,17 +21,6 @@ enum ShortcutChoice: String, CaseIterable, Identifiable {
     var keyCode: UInt32 { self == .optionSpace ? 49 : 36 }
 }
 
-enum DecorationKind: String, CaseIterable, Codable, Identifiable {
-    case fish, apple
-    var id: String { rawValue }
-    var title: String {
-        switch self {
-        case .fish: L10n.t("decoration.fish")
-        case .apple: L10n.t("decoration.apple")
-        }
-    }
-}
-
 @MainActor
 final class AppSettings: ObservableObject {
     static let defaultAutoCollapseSeconds = 10.0
@@ -50,9 +39,6 @@ final class AppSettings: ObservableObject {
     @Published var launchAtLogin: Bool {
         didSet { defaults.set(launchAtLogin, forKey: Keys.launchAtLogin) }
     }
-    @Published var decoration: DecorationKind {
-        didSet { defaults.set(decoration.rawValue, forKey: Keys.decoration) }
-    }
     @Published var shortcutChoiceRaw: String {
         didSet { defaults.set(shortcutChoiceRaw, forKey: Keys.shortcutChoice) }
     }
@@ -62,7 +48,6 @@ final class AppSettings: ObservableObject {
         static let showsTaskCount = "showsTaskCount"
         static let externalDisplayPlacement = "externalDisplayPlacement"
         static let launchAtLogin = "launchAtLogin"
-        static let decoration = "decoration"
         static let shortcutChoice = "shortcutChoice"
     }
 
@@ -73,7 +58,6 @@ final class AppSettings: ObservableObject {
         externalDisplayPlacementRaw = d.string(forKey: Keys.externalDisplayPlacement) ?? ExternalDisplayPlacement.center.rawValue
         launchAtLogin = (d.object(forKey: Keys.launchAtLogin) as? Bool) ?? true
         shortcutChoiceRaw = d.string(forKey: Keys.shortcutChoice) ?? ShortcutChoice.defaultChoice.rawValue
-        decoration = DecorationKind(rawValue: d.string(forKey: Keys.decoration) ?? "") ?? .fish
     }
 
     var externalDisplayPlacement: ExternalDisplayPlacement {

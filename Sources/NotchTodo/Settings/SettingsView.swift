@@ -26,13 +26,6 @@ struct SettingsView: View {
                 Toggle(L10n.t("settings.launchAtLogin"), isOn: $settings.launchAtLogin).onChange(of: settings.launchAtLogin) { _, enabled in do { try LaunchAtLoginService.setEnabled(enabled) } catch { launchError = error.localizedDescription; settings.launchAtLogin = LaunchAtLoginService.isEnabled } }
                 if let launchError { Text(launchError).foregroundStyle(.red) }
             }
-            Section(L10n.t("decoration.title")) {
-                Picker(L10n.t("decoration.kind"), selection: $settings.decoration) {
-                    ForEach(DecorationKind.allCases, id: \.self) { kind in
-                        Text(kind.title).tag(kind)
-                    }
-                }
-            }
         }.padding().frame(width: 420)
     }
 }
