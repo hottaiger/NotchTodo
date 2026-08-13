@@ -56,8 +56,7 @@ struct NotchSurfaceView: View {
                     .allowsHitTesting(false)
             }
         if Self.shouldShowFish(isExpanded: controller.isExpanded) {
-            Text("🐟")
-                .font(.system(size: 16))
+            FishEmojiView()
                 .frame(maxHeight: .infinity)
                 .padding(.leading, fishLeadingInset)
                 .allowsHitTesting(false)
