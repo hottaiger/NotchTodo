@@ -8,7 +8,6 @@ struct PixelFishView: View {
     let shouldReduceMotion: Bool
     @State private var shakeOffset: CGFloat = 0
     @State private var swimBob: CGFloat = 0
-    @State private var tailWag = false
     @State private var shakeWorkItems: [DispatchWorkItem] = []
 
     private static let bodyLight = Color(red: 0.60, green: 1.00, blue: 0.93)
@@ -39,11 +38,8 @@ struct PixelFishView: View {
 
     var body: some View {
         Canvas { context, _ in
-            // 尾鳍（x <= 4，鱼尾在左）按 tailWag 上下摆动；reduce motion 时归位。
-            let tailDelta: CGFloat = shouldReduceMotion ? 0 : (tailWag ? -2 : 2)
             for pixel in Self.pixels {
-                let y = pixel.1 + (pixel.0 <= 4 ? tailDelta : 0)
-                context.fill(Path(CGRect(x: pixel.0, y: y, width: 2, height: 2)), with: .color(pixel.2))
+                context.fill(Path(CGRect(x: pixel.0, y: pixel.1, width: 2, height: 2)), with: .color(pixel.2))
             }
         }
         .frame(width: 32, height: 18)
@@ -66,9 +62,6 @@ struct PixelFishView: View {
         guard !shouldReduceMotion else { return }
         withAnimation(.easeInOut(duration: 1.1).repeatForever(autoreverses: true)) {
             swimBob = -2
-        }
-        withAnimation(.easeInOut(duration: 0.30).repeatForever(autoreverses: true)) {
-            tailWag = true
         }
     }
 
