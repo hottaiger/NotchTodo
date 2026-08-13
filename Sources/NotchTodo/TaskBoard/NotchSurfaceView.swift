@@ -63,15 +63,16 @@ struct NotchSurfaceView: View {
                         collapseAnimationID: controller.collapseAnimationID,
                         shouldReduceMotion: NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
                     )
+                    .padding(.top, 10)
                 case .apple:
                     AppleView(
                         collapseAnimationID: controller.collapseAnimationID,
                         shouldReduceMotion: NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
                     )
+                    .frame(maxHeight: .infinity)
                 }
             }
             .padding(.leading, fishLeadingInset)
-            .padding(.top, 10)
             .allowsHitTesting(false)
         }
         }
