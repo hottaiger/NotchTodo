@@ -91,6 +91,12 @@
 "placement.leading" = "Top left";
 "placement.trailing" = "Top right";
 
+/* Decoration */
+"decoration.title" = "Decoration";
+"decoration.kind" = "Decoration type";
+"decoration.fish" = "Fish";
+"decoration.apple" = "Apple";
+
 /* Errors */
 "error.unsupportedVersion" = "Unsupported backup version";
 "error.emptyTitle" = "Task title cannot be empty";
