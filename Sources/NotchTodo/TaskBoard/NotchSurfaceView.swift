@@ -2,7 +2,7 @@ import SwiftUI
 
 enum CapsuleSummaryText {
     static func title(from titles: [String]) -> String {
-        guard let first = titles.first, !first.isEmpty else { return "暂无待办" }
+        guard let first = titles.first, !first.isEmpty else { return L10n.t("capsule.empty") }
         var usedUnits = 0.0
         var prefix = ""
         for character in first {
@@ -41,9 +41,9 @@ struct NotchSurfaceView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
                     .onTapGesture { controller.expand() }
                     .contextMenu {
-                        Button("打开待办看板") { controller.expand() }
+                        Button(L10n.t("capsule.openBoard")) { controller.expand() }
                         Divider()
-                        Button("退出 NotchTodo", role: .destructive) { NSApp.terminate(nil) }
+                        Button(L10n.t("capsule.quit"), role: .destructive) { NSApp.terminate(nil) }
                     }
             }
             if Self.shouldUseFishBackground(isExpanded: controller.isExpanded) {
@@ -81,7 +81,7 @@ private struct CapsuleSummaryView: View {
                 Text(CapsuleSummaryText.title(from: [headlineTask?.title].compactMap { $0 }))
                     .font(.system(size: 12, weight: .semibold))
             } else {
-                Text("\(store.activeTasks.count) 项待办").font(.system(size: 12, weight: .semibold))
+                    Text(L10n.t("capsule.count", store.activeTasks.count)).font(.system(size: 12, weight: .semibold))
             }
         }
         .foregroundStyle(.white)
@@ -103,8 +103,8 @@ private struct CapsuleSummaryView: View {
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("NotchTodo，\(store.activeTasks.count) 项未完成任务")
-        .accessibilityHint("点击展开待办看板")
+        .accessibilityLabel(L10n.t("capsule.accessibility", store.activeTasks.count))
+        .accessibilityHint(L10n.t("capsule.hint"))
     }
 
     private func color(for priority: TaskPriority?) -> Color {

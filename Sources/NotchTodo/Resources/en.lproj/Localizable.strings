@@ -1,4 +1,4 @@
-/* Board column titles */
+/* Board columns */
 "board.now" = "Now";
 "board.today" = "Today";
 "board.later" = "Later";
@@ -6,3 +6,95 @@
 /* Quick add */
 "quickadd.placeholder" = "Add a task, press Enter to create";
 "quickadd.empty" = "Nothing yet. Type something you want to get done.";
+"quickadd.accessibility" = "Quick add task";
+
+/* Board header */
+"board.tagline" = "Focus on the next thing that matters";
+"board.collapse" = "Collapse board";
+"board.completed" = "Completed %lld";
+"board.clearCompleted" = "Clear";
+"board.archived" = "Recently archived %lld";
+"board.restore" = "Restore";
+"board.error" = "Something went wrong";
+"board.ok" = "OK";
+
+/* Capsule */
+"capsule.empty" = "No tasks";
+"capsule.count" = "%lld tasks";
+"capsule.accessibility" = "NotchTodo, %lld incomplete tasks";
+"capsule.hint" = "Click to expand the task board";
+"capsule.openBoard" = "Open task board";
+"capsule.quit" = "Quit NotchTodo";
+
+/* Card */
+"card.overdue" = "Overdue";
+"card.copyTitle" = "Copy title";
+"card.copyAccessibility" = "Copy task title: %@";
+"card.completeAccessibility" = "Complete %@";
+"card.reopenAccessibility" = "Reopen %@";
+"card.priority" = "Priority";
+"card.defer" = "Defer to tomorrow";
+"card.delete" = "Delete";
+
+/* Column */
+"column.accessibility" = "%@ tasks";
+
+/* Editor */
+"editor.title" = "Edit Task";
+"editor.titleField" = "Title";
+"editor.priority" = "Priority";
+"editor.dueToggle" = "Set due date";
+"editor.dueDate" = "Due date";
+"editor.note" = "Notes";
+"editor.cancel" = "Cancel";
+"editor.save" = "Save";
+
+/* Onboarding */
+"onboarding.welcome" = "Welcome to NotchTodo";
+"onboarding.body" = "Click the notch area to open the task board. Toggle any time with Option + Enter.\nAll data stays only on this Mac.";
+"onboarding.start" = "Get started";
+
+/* Settings */
+"settings.windowTitle" = "NotchTodo Settings";
+"settings.behavior" = "Behavior";
+"settings.display" = "Display";
+"settings.launch" = "Launch";
+"settings.showCount" = "Show incomplete count";
+"settings.autoCollapse" = "Auto-collapse";
+"settings.shortcut" = "Global shortcut";
+"settings.off" = "Off";
+"settings.seconds.5" = "5 sec";
+"settings.seconds.10" = "10 sec";
+"settings.seconds.30" = "30 sec";
+"settings.placement" = "External display position";
+"settings.launchAtLogin" = "Launch at login";
+"settings.shortcutError" = "Shortcut may be taken by another app";
+
+/* Menu */
+"menu.openBoard" = "Open task board";
+"menu.export" = "Export JSON…";
+"menu.import" = "Import JSON…";
+"menu.settings" = "Settings…";
+"menu.quit" = "Quit NotchTodo";
+"recovery.title" = "Data restored";
+
+/* Progress */
+"progress.accessibility" = "%lld of %lld done today";
+
+/* Priority */
+"priority.low" = "Low";
+"priority.medium" = "Medium";
+"priority.high" = "High";
+
+/* Placement */
+"placement.center" = "Top center";
+"placement.leading" = "Top left";
+"placement.trailing" = "Top right";
+
+/* Errors */
+"error.unsupportedVersion" = "Unsupported backup version";
+"error.emptyTitle" = "Task title cannot be empty";
+
+/* Recovery messages */
+"recovery.movedToRecovery" = "Local data could not be read; the original file was moved to the Recovery folder. Please import a backup from the menu bar.";
+"recovery.freshLibrary" = "Local data could not be read; a fresh empty library was started. Please import a backup from the menu bar.";

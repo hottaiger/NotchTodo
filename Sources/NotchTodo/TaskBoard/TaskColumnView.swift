@@ -21,6 +21,6 @@ struct TaskColumnView: View {
             guard let identifier = identifiers.first, let id = UUID(uuidString: identifier), let task = store.tasks.first(where: { $0.id == id }) else { return false }
             store.move(task, to: bucket); activity(); return true
         } isTargeted: { isTargeted = $0 }
-        .accessibilityLabel("\(bucket.title)任务列")
+        .accessibilityLabel(L10n.t("column.accessibility", bucket.title))
     }
 }

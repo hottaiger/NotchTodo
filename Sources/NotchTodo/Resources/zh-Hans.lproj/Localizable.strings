@@ -1,4 +1,4 @@
-/* Board column titles */
+/* Board columns */
 "board.now" = "现在";
 "board.today" = "今天";
 "board.later" = "稍后";
@@ -6,3 +6,95 @@
 /* Quick add */
 "quickadd.placeholder" = "添加待办，按回车创建";
 "quickadd.empty" = "今天还没有待办。输入一件想完成的事。";
+"quickadd.accessibility" = "快速新增待办";
+
+/* Board header */
+"board.tagline" = "专注于下一件重要的事";
+"board.collapse" = "收起看板";
+"board.completed" = "已完成 %lld 项";
+"board.clearCompleted" = "清空";
+"board.archived" = "最近归档 %lld 项";
+"board.restore" = "恢复";
+"board.error" = "出错了";
+"board.ok" = "好";
+
+/* Capsule */
+"capsule.empty" = "暂无待办";
+"capsule.count" = "%lld 项待办";
+"capsule.accessibility" = "NotchTodo，%lld 项未完成任务";
+"capsule.hint" = "点击展开待办看板";
+"capsule.openBoard" = "打开待办看板";
+"capsule.quit" = "退出 NotchTodo";
+
+/* Card */
+"card.overdue" = "逾期";
+"card.copyTitle" = "复制标题";
+"card.copyAccessibility" = "复制待办标题：%@";
+"card.completeAccessibility" = "完成 %@";
+"card.reopenAccessibility" = "恢复 %@";
+"card.priority" = "优先级";
+"card.defer" = "延期到明天";
+"card.delete" = "删除";
+
+/* Column */
+"column.accessibility" = "%@任务列";
+
+/* Editor */
+"editor.title" = "编辑待办";
+"editor.titleField" = "标题";
+"editor.priority" = "优先级";
+"editor.dueToggle" = "设置截止日期";
+"editor.dueDate" = "截止日期";
+"editor.note" = "备注";
+"editor.cancel" = "取消";
+"editor.save" = "保存";
+
+/* Onboarding */
+"onboarding.welcome" = "欢迎使用 NotchTodo";
+"onboarding.body" = "点击刘海区域打开待办看板。Option + Enter 可随时切换。\n所有数据只保存在这台 Mac 上。";
+"onboarding.start" = "开始使用";
+
+/* Settings */
+"settings.windowTitle" = "NotchTodo 设置";
+"settings.behavior" = "行为";
+"settings.display" = "显示器";
+"settings.launch" = "启动";
+"settings.showCount" = "显示未完成数量";
+"settings.autoCollapse" = "自动收起";
+"settings.shortcut" = "全局快捷键";
+"settings.off" = "关闭";
+"settings.seconds.5" = "5 秒";
+"settings.seconds.10" = "10 秒";
+"settings.seconds.30" = "30 秒";
+"settings.placement" = "外接显示器位置";
+"settings.launchAtLogin" = "登录时启动";
+"settings.shortcutError" = "快捷键可能被其他应用占用，未生效";
+
+/* Menu */
+"menu.openBoard" = "打开待办看板";
+"menu.export" = "导出 JSON…";
+"menu.import" = "导入 JSON…";
+"menu.settings" = "设置…";
+"menu.quit" = "退出 NotchTodo";
+"recovery.title" = "数据已恢复";
+
+/* Progress */
+"progress.accessibility" = "今日完成 %lld 项，共 %lld 项";
+
+/* Priority */
+"priority.low" = "低";
+"priority.medium" = "中";
+"priority.high" = "高";
+
+/* Placement */
+"placement.center" = "顶部居中";
+"placement.leading" = "顶部左侧";
+"placement.trailing" = "顶部右侧";
+
+/* Errors */
+"error.unsupportedVersion" = "不支持的备份版本";
+"error.emptyTitle" = "任务标题不能为空";
+
+/* Recovery messages */
+"recovery.movedToRecovery" = "本地数据无法读取，原始数据已移至恢复目录。请从菜单栏导入备份。";
+"recovery.freshLibrary" = "本地数据无法读取，已启动空白恢复库。请从菜单栏导入备份。";

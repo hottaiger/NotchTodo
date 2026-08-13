@@ -43,7 +43,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         if let recoveryMessage {
-            DispatchQueue.main.async { [weak self] in self?.present(recoveryMessage, title: "数据已恢复") }
+            DispatchQueue.main.async { [weak self] in self?.present(recoveryMessage, title: L10n.t("recovery.title")) }
         }
     }
 
@@ -52,7 +52,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         guard let shortcut else { return false }
         let ok = shortcut.register(choice)
         if !ok {
-            // 新快捷键注册失败，回滚到当前已保存的选择
             _ = shortcut.register(settings.shortcutChoice)
         }
         return ok
@@ -66,12 +65,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         item.button?.toolTip = "NotchTodo"
         item.button?.setAccessibilityLabel("NotchTodo")
         let menu = NSMenu()
-        menu.addItem(withTitle: "打开待办看板", action: #selector(togglePanel), keyEquivalent: "")
-        menu.addItem(withTitle: "导出 JSON…", action: #selector(exportTasks), keyEquivalent: "")
-        menu.addItem(withTitle: "导入 JSON…", action: #selector(importTasks), keyEquivalent: "")
-        menu.addItem(withTitle: "设置…", action: #selector(showSettings), keyEquivalent: ",")
+        menu.addItem(withTitle: L10n.t("menu.openBoard"), action: #selector(togglePanel), keyEquivalent: "")
+        menu.addItem(withTitle: L10n.t("menu.export"), action: #selector(exportTasks), keyEquivalent: "")
+        menu.addItem(withTitle: L10n.t("menu.import"), action: #selector(importTasks), keyEquivalent: "")
+        menu.addItem(withTitle: L10n.t("menu.settings"), action: #selector(showSettings), keyEquivalent: ",")
         menu.addItem(.separator())
-        menu.addItem(withTitle: "退出 NotchTodo", action: #selector(quit), keyEquivalent: "q")
+        menu.addItem(withTitle: L10n.t("menu.quit"), action: #selector(quit), keyEquivalent: "q")
         menu.items.forEach { $0.target = self }
         item.menu = menu
         statusItem = item
@@ -83,7 +82,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func showSettings() {
         if settingsWindow == nil {
             let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 440, height: 320), styleMask: [.titled, .closable], backing: .buffered, defer: false)
-            window.title = "NotchTodo 设置"
+            window.title = L10n.t("settings.windowTitle")
             window.isReleasedWhenClosed = false
             window.contentView = NSHostingView(rootView: SettingsView(settings: settings, appDelegate: self))
             window.center()

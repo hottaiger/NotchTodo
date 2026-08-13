@@ -8,22 +8,22 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
-            Section("行为") {
-                Toggle("显示未完成数量", isOn: $settings.showsTaskCount)
-                Picker("自动收起", selection: $settings.autoCollapseSeconds) { Text("关闭").tag(0.0); Text("5 秒").tag(5.0); Text("10 秒").tag(10.0); Text("30 秒").tag(30.0) }
-                Picker("全局快捷键", selection: Binding(get: { settings.shortcutChoice }, set: { newValue in
+            Section(L10n.t("settings.behavior")) {
+                Toggle(L10n.t("settings.showCount"), isOn: $settings.showsTaskCount)
+                Picker(L10n.t("settings.autoCollapse"), selection: $settings.autoCollapseSeconds) { Text(L10n.t("settings.off")).tag(0.0); Text(L10n.t("settings.seconds.5")).tag(5.0); Text(L10n.t("settings.seconds.10")).tag(10.0); Text(L10n.t("settings.seconds.30")).tag(30.0) }
+                Picker(L10n.t("settings.shortcut"), selection: Binding(get: { settings.shortcutChoice }, set: { newValue in
                     if appDelegate.configureShortcut(newValue) {
                         settings.shortcutChoice = newValue
                         shortcutError = nil
                     } else {
-                        shortcutError = "快捷键可能被其他应用占用，未生效"
+                        shortcutError = L10n.t("settings.shortcutError")
                     }
                 })) { ForEach(ShortcutChoice.allCases) { Text($0.title).tag($0) } }
                 if let shortcutError { Text(shortcutError).foregroundStyle(.red) }
             }
-            Section("显示器") { Picker("外接显示器位置", selection: Binding(get: { settings.externalDisplayPlacement }, set: { settings.externalDisplayPlacement = $0; appDelegate.refreshPanelPlacement() })) { ForEach(ExternalDisplayPlacement.allCases) { Text($0.title).tag($0) } } }
-            Section("启动") {
-                Toggle("登录时启动", isOn: $settings.launchAtLogin).onChange(of: settings.launchAtLogin) { _, enabled in do { try LaunchAtLoginService.setEnabled(enabled) } catch { launchError = error.localizedDescription; settings.launchAtLogin = LaunchAtLoginService.isEnabled } }
+            Section(L10n.t("settings.display")) { Picker(L10n.t("settings.placement"), selection: Binding(get: { settings.externalDisplayPlacement }, set: { settings.externalDisplayPlacement = $0; appDelegate.refreshPanelPlacement() })) { ForEach(ExternalDisplayPlacement.allCases) { Text($0.title).tag($0) } } }
+            Section(L10n.t("settings.launch")) {
+                Toggle(L10n.t("settings.launchAtLogin"), isOn: $settings.launchAtLogin).onChange(of: settings.launchAtLogin) { _, enabled in do { try LaunchAtLoginService.setEnabled(enabled) } catch { launchError = error.localizedDescription; settings.launchAtLogin = LaunchAtLoginService.isEnabled } }
                 if let launchError { Text(launchError).foregroundStyle(.red) }
             }
         }.padding().frame(width: 420)

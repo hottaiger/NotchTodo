@@ -20,10 +20,10 @@ enum ModelContainerFactory {
             }
             do {
                 let configuration = ModelConfiguration("NotchTodo", schema: schema, url: storeURL, cloudKitDatabase: .none)
-                return (try ModelContainer(for: TodoTask.self, configurations: configuration), "本地数据无法读取，原始数据已移至恢复目录。请从菜单栏导入备份。")
+                return (try ModelContainer(for: TodoTask.self, configurations: configuration), L10n.t("recovery.movedToRecovery"))
             } catch {
                 let fallback = ModelConfiguration("NotchTodo-Recovery", schema: schema, isStoredInMemoryOnly: true)
-                return (try! ModelContainer(for: TodoTask.self, configurations: fallback), "本地数据无法读取，已启动空白恢复库。请从菜单栏导入备份。")
+                return (try! ModelContainer(for: TodoTask.self, configurations: fallback), L10n.t("recovery.freshLibrary"))
             }
         }
     }

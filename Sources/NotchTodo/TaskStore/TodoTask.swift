@@ -22,7 +22,13 @@ enum TaskPriority: Int, CaseIterable, Codable, Identifiable, Sendable {
     case high = 2
 
     var id: Int { rawValue }
-    var title: String { ["低", "中", "高"][rawValue] }
+    var title: String {
+        switch self {
+        case .low: L10n.t("priority.low")
+        case .medium: L10n.t("priority.medium")
+        case .high: L10n.t("priority.high")
+        }
+    }
 }
 
 @Model

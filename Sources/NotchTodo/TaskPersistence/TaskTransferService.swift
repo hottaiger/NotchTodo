@@ -46,7 +46,7 @@ enum TaskTransferService {
     }
 
     enum TransferError: LocalizedError { case unsupportedVersion, emptyTitle
-        var errorDescription: String? { self == .unsupportedVersion ? "不支持的备份版本" : "任务标题不能为空" }
+        var errorDescription: String? { self == .unsupportedVersion ? L10n.t("error.unsupportedVersion") : L10n.t("error.emptyTitle") }
     }
 }
 

@@ -4,7 +4,13 @@ import SwiftUI
 enum ExternalDisplayPlacement: String, CaseIterable, Identifiable {
     case center, leading, trailing
     var id: String { rawValue }
-    var title: String { ["center": "顶部居中", "leading": "顶部左侧", "trailing": "顶部右侧"][rawValue]! }
+    var title: String {
+        switch self {
+        case .center: L10n.t("placement.center")
+        case .leading: L10n.t("placement.leading")
+        case .trailing: L10n.t("placement.trailing")
+        }
+    }
 }
 
 enum ShortcutChoice: String, CaseIterable, Identifiable {

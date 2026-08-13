@@ -31,9 +31,9 @@ struct TaskCardView: View {
                 return .handled
             }
             .contextMenu {
-                Menu("优先级") { ForEach(TaskPriority.allCases) { priority in Button(priority.title) { store.setPriority(task, priority: priority) } } }
-                Button("延期到明天") { store.deferToTomorrow(task) }
-                Button("删除", role: .destructive) { store.delete(task) }
+                Menu(L10n.t("card.priority")) { ForEach(TaskPriority.allCases) { priority in Button(priority.title) { store.setPriority(task, priority: priority) } } }
+                Button(L10n.t("card.defer")) { store.deferToTomorrow(task) }
+                Button(L10n.t("card.delete"), role: .destructive) { store.delete(task) }
             }
             .dropDestination(for: String.self) { identifiers, _ in
                 guard let raw = identifiers.first,
@@ -59,11 +59,11 @@ struct TaskCardView: View {
                     .foregroundStyle(task.isCompleted ? .green : priorityColor)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(task.isCompleted ? "恢复 \(task.title)" : "完成 \(task.title)")
+            .accessibilityLabel(task.isCompleted ? L10n.t("card.reopenAccessibility", task.title) : L10n.t("card.completeAccessibility", task.title))
             VStack(alignment: .leading, spacing: 3) {
                 Text(task.title).font(.system(size: 12, weight: .medium)).strikethrough(task.isCompleted).lineLimit(2)
                 if let dueDate = task.dueDate {
-                    Label(task.isOverdue ? "逾期" : dueDate.formatted(.dateTime.month(.abbreviated).day()), systemImage: task.isOverdue ? "exclamationmark.circle.fill" : "calendar")
+                    Label(task.isOverdue ? L10n.t("card.overdue") : dueDate.formatted(.dateTime.month(.abbreviated).day()), systemImage: task.isOverdue ? "exclamationmark.circle.fill" : "calendar")
                         .font(.system(size: 9)).foregroundStyle(task.isOverdue ? .red : (task.isDueSoon ? .orange : .secondary))
                 }
             }
@@ -77,8 +77,8 @@ struct TaskCardView: View {
                     .foregroundStyle(.secondary)
             }
             .buttonStyle(.plain)
-            .help("复制标题")
-            .accessibilityLabel("复制待办标题：(task.title)")
+            .help(L10n.t("card.copyTitle"))
+            .accessibilityLabel(L10n.t("card.copyAccessibility", task.title))
         }
     }
 

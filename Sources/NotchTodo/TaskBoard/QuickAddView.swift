@@ -14,6 +14,6 @@ struct QuickAddView: View {
             .focused($focused)
             .onSubmit { if store.add(title: title) != nil { title = "" }; activity() }
             .onChange(of: title) { _, _ in activity() }
-            .accessibilityLabel("快速新增待办")
+            .accessibilityLabel(L10n.t("quickadd.accessibility"))
     }
 }

@@ -28,11 +28,11 @@ struct TaskBoardView: View {
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(Date.now.formatted(.dateTime.weekday(.wide).month().day())).font(.system(size: 13, weight: .semibold))
-                    Text("专注于下一件重要的事").font(.system(size: 11)).foregroundStyle(.secondary)
+                    Text(L10n.t("board.tagline")).font(.system(size: 11)).foregroundStyle(.secondary)
                 }
                 Spacer()
                 CompletionProgressView(completed: completeCount, total: totalToday).frame(width: 34, height: 34)
-                Button { controller.collapse() } label: { Image(systemName: "xmark").font(.system(size: 11, weight: .bold)) }.buttonStyle(.plain).accessibilityLabel("收起看板")
+                Button { controller.collapse() } label: { Image(systemName: "xmark").font(.system(size: 11, weight: .bold)) }.buttonStyle(.plain).accessibilityLabel(L10n.t("board.collapse"))
             }
             QuickAddView(store: store, focused: $quickAddFocused, activity: controller.registerActivity)
             HStack(alignment: .top, spacing: 8) {
@@ -42,24 +42,24 @@ struct TaskBoardView: View {
             }
             if !store.completedTasks.isEmpty {
                 HStack {
-                    DisclosureGroup("已完成 \(store.completedTasks.count) 项", isExpanded: $isCompletedExpanded) {
+                    DisclosureGroup(L10n.t("board.completed", store.completedTasks.count), isExpanded: $isCompletedExpanded) {
                         ForEach(store.completedTasks, id: \.id) { task in
                             TaskCardView(task: task, store: store, editorTask: editorBinding, activity: controller.registerActivity)
                         }
                     }
                     Spacer(minLength: 4)
-                    Button("清空") { clearCompleted() }
+                    Button(L10n.t("board.clearCompleted")) { clearCompleted() }
                         .buttonStyle(.plain).font(.system(size: 11)).foregroundStyle(.red)
                 }
                 .font(.system(size: 11))
             }
             if !store.archivedTasks.isEmpty {
-                DisclosureGroup("最近归档 \(store.archivedTasks.count) 项", isExpanded: $isArchivedExpanded) {
+                DisclosureGroup(L10n.t("board.archived", store.archivedTasks.count), isExpanded: $isArchivedExpanded) {
                     ForEach(store.archivedTasks, id: \.id) { task in
                         HStack {
                             Text(task.title).font(.system(size: 12)).strikethrough().foregroundStyle(.secondary).lineLimit(1)
                             Spacer()
-                            Button("恢复") { store.unarchive(task); controller.registerActivity() }
+                            Button(L10n.t("board.restore")) { store.unarchive(task); controller.registerActivity() }
                                 .buttonStyle(.plain).font(.system(size: 11)).foregroundStyle(.blue)
                         }
                     }
@@ -87,8 +87,8 @@ struct TaskBoardView: View {
             case .editor(let task): TaskEditorView(task: task, store: store)
             }
         }
-        .alert("出错了", isPresented: Binding(get: { store.saveError != nil }, set: { if !$0 { store.clearError() } })) {
-            Button("好") { store.clearError() }
+        .alert(L10n.t("board.error"), isPresented: Binding(get: { store.saveError != nil }, set: { if !$0 { store.clearError() } })) {
+            Button(L10n.t("board.ok")) { store.clearError() }
         } message: {
             Text(store.saveError ?? "")
         }
@@ -99,8 +99,6 @@ struct TaskBoardView: View {
         for task in snapshot { store.delete(task) }
     }
 
-    /// Maps the unified `activeSheet` state onto the `editorTask: Binding<TodoTask?>`
-    /// expected by TaskColumnView / TaskCardView, so child views need no changes.
     private var editorBinding: Binding<TodoTask?> {
         Binding(
             get: {
