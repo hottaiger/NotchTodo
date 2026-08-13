@@ -70,6 +70,7 @@ struct NotchSurfaceView: View {
                         shouldReduceMotion: NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
                     )
                     .frame(maxHeight: .infinity)
+                    .scaleEffect(0.75)
                 }
             }
             .padding(.leading, fishLeadingInset)
