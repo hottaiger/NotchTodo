@@ -7,7 +7,7 @@ struct QuickAddView: View {
     @State private var title = ""
 
     var body: some View {
-        TextField("添加待办，按回车创建", text: $title)
+        TextField(L10n.t("quickadd.placeholder"), text: $title)
             .textFieldStyle(.plain)
             .padding(.horizontal, 10).padding(.vertical, 8)
             .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 10, style: .continuous))

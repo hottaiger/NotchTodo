@@ -1,0 +1,8 @@
+/* Board column titles */
+"board.now" = "现在";
+"board.today" = "今天";
+"board.later" = "稍后";
+
+/* Quick add */
+"quickadd.placeholder" = "添加待办，按回车创建";
+"quickadd.empty" = "今天还没有待办。输入一件想完成的事。";

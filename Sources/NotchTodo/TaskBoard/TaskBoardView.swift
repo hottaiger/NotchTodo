@@ -67,7 +67,7 @@ struct TaskBoardView: View {
                 .font(.system(size: 11))
             }
             if store.activeTasks.isEmpty {
-                Text("今天还没有待办。输入一件想完成的事。")
+                Text(L10n.t("quickadd.empty"))
                     .font(.system(size: 12)).foregroundStyle(.secondary).frame(maxWidth: .infinity, minHeight: 42)
             }
         }

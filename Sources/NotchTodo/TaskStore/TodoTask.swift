@@ -9,9 +9,9 @@ enum TaskBucket: String, CaseIterable, Codable, Identifiable, Sendable {
     var id: String { rawValue }
     var title: String {
         switch self {
-        case .now: "现在"
-        case .today: "今天"
-        case .later: "稍后"
+        case .now: L10n.t("board.now")
+        case .today: L10n.t("board.today")
+        case .later: L10n.t("board.later")
         }
     }
 }

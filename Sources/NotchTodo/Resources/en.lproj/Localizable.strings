@@ -1,0 +1,8 @@
+/* Board column titles */
+"board.now" = "Now";
+"board.today" = "Today";
+"board.later" = "Later";
+
+/* Quick add */
+"quickadd.placeholder" = "Add a task, press Enter to create";
+"quickadd.empty" = "Nothing yet. Type something you want to get done.";
