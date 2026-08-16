@@ -50,6 +50,8 @@ final class NotchPanelController: NSObject, ObservableObject {
     func expand() {
         guard !isExpanded else { return }
         let screen = DisplayPlacementResolver.preferredScreen() ?? NSScreen.screens[0]
+        // accessory 应用需要显式激活，否则键盘事件仍发给前台应用，输入框无法打字
+        NSApp.activate(ignoringOtherApps: true)
         panel.makeKeyAndOrderFront(nil)
         transitionPhase = .expanding
         isExpanded = true
