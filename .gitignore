@@ -4,11 +4,6 @@
 DerivedData/
 *.xcuserstate
 *.xcworkspace/xcuserdata/
-# >>> Comet managed project state >>>
-!/.comet/
-/.comet/*
-!/.comet/config.yaml
-# <<< Comet managed project state <<<
 
 # AI agent tool local state (skills/rules/hooks caches + generated instruction mirrors)
 .agents/
@@ -20,3 +15,13 @@ CLAUDE.md
 
 # release archives
 NotchTodo-*.zip
+
+# vision.js API key (Minimax)
+.env
+.env.*
+!/.env.example
+# >>> Comet managed project state >>>
+!/.comet/
+/.comet/*
+!/.comet/config.yaml
+# <<< Comet managed project state <<<
